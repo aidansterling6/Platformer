@@ -7,10 +7,31 @@ class Platformer extends Phaser.Scene {
         this.SCALE = 2.0;
         this.width = config.width;
         this.height = config.height;
+        //the level the player is on
+        this.CurrentLevel = 2;
 
         this.X = 44;
         this.Y = 0;
 
+
+        this.toRad = function(degrees){
+          return degrees * (Math.PI/180);
+        }
+        this.toDeg = function(radians){
+          return radians * (180/Math.PI);
+        }
+        this.sin = function(num){
+          return Math.sin(this.toRad(num));
+        }
+        this.cos = function(num){
+          return Math.cos(this.toRad(num));
+        }
+        this.atan = function(num){
+          return this.toDeg(Math.atan(num));
+        }
+        this.atan2 = function(num1, num2){
+          return this.toDeg(Math.atan2(num1, num2));
+        }
         this.dist = function(x1, y1, x2, y2){
             return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
         }
@@ -67,23 +88,23 @@ class Platformer extends Phaser.Scene {
         this.helpPoint = [];
         //an array holding all of the blocks
         this.rects = [];
-        //the level the player is on
-        this.CurrentLevel = 1;
         //an array holding all this.lazers
         this.lazer = [];
         //an array holding all this.mirrors
         this.mirror = [];
         //sets the level to it's argument
-        this.level = function(num){
+        this.level = function(num, bReset){
             if(num === 1){
             this.dragi = -1;
             this.gravity = 0.1;
             this.mspeed = 5;
             this.maxSpeed = 3;
-            this.respawnX = 100;
-            this.respawnY = 231;
+            if(bReset){
+              this.respawnX = 100;
+              this.respawnY = 231;
+            }
             this.dead = false;
-            this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"this.You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"this.You can only move the lightly colored pipes"}];
+            this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
             this.noMagic = [{x:646,y:200,w:109,h:40}];
             this.checkPoint = [204,1100,1650,2080,2223];
             this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:600,y:250,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},{x:600,y:113,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:400,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:360,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:380,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},{x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:6,n2:0,mi:false},{x:500,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:460,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:480,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},{x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},{x:700,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:660,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:680,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},{x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},{x:1000,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:960,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
@@ -100,14 +121,46 @@ class Platformer extends Phaser.Scene {
             this.gravity = 0.1;
             this.mspeed = 5;
             this.maxSpeed = 3;
-            this.respawnX = 49;
-            this.respawnY = 200;
+            if(bReset){
+              // this.respawnX = 49;
+              // this.respawnY = 200;
+              this.respawnX = 600;
+              this.respawnY = 100;
+            }
             this.dead = false;
             this.helpPoint = [];
             this.noMagic = [{x:220,y:240,w:99,h:40},{x:664,y:84,w:100,h:120}];
             this.checkPoint = [600,819];
-            this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:212,y:270,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:329,y:270,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:270,y:290,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:388,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:468,y:130,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:295,y:60,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:335,y:142,w:20,h:146,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:305,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},{x:236,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},{x:145,y:177,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:5,n2:-1,mi:false},{x:145,y:157,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},{x:407,y:233,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},{x:593,y:130,w:176,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:683,y:172,w:20,h:104,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:733,y:214,w:80,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:774,y:134,w:20,h:180,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:695,y:130,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:5,n2:-1,mi:false},{x:624,y:88,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipelum",n1:5,n2:-1,mi:false},{x:827,y:54,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}];
+            this.rects = [
+              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {x:100,y:250 + 5000/2,w:230,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:212,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:329,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:270,y:290 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:388,y:250 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:468,y:130 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:245,y:60,w:520,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:335,y:142,w:20,h:146,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:305,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
+              {x:236,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
+              {x:145,y:177,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:5,n2:-1,mi:false},
+              {x:145,y:157,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
+              {x:407,y:233,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {x:593,y:130 + 5000/2,w:176,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:683,y:172 + 5000/2,w:20,h:5000 + 104,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:733,y:214 + 5000/2,w:80,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:774,y:134 + 5000/2,w:20,h:5000 + 180,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:695,y:130,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:5,n2:-1,mi:false},
+              {x:624,y:88,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipelum",n1:5,n2:-1,mi:false},
+              {x:827,y:54 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:610,y:-40,w:240,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:500,y:10,w:20,h:120,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:735,y:-25,w:20,h:50,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:810,y:-10,w:135,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+            ];
                     
                     
             }
@@ -116,16 +169,18 @@ class Platformer extends Phaser.Scene {
             this.gravity = 0.1;
             this.mspeed = 5;
             this.maxSpeed = 3;
-            this.respawnX = 93;
-            this.respawnY = 200;
+            if(bReset){
+              this.respawnX = 93;
+              this.respawnY = 200;
+            }
             this.dead = false;
             this.helpPoint = [{x:100,t:"The white lines ether reflect or block lasers"},{x:110,t:"The thin red lines are this.lazers, you can move the grey laser shoting box"},{x:120,t:"Get a laser to the greyish blue boxes to open a gate just like a button"}];
             this.noMagic = [];
             this.checkPoint = [261,474,800];
             this.mirror = [{x:269,y:266,l:1000,a:89.9999,c:1,r:false,tx:-219,ty:0,b:false},{x:335,y:118,l:100,a:89.9999,c:1,r:false,tx:-37,ty:-118,b:false}];
             this.lazer = [];
-            //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
-            this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:226,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.lazer",n1:0,n2:0,mi:false},{x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.mirror",n1:135,n2:0,mi:false},{x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},{x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:301,y:290,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.lazer",n1:-90,n2:0,mi:false},{x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.mirror",n1:135,n2:0,mi:false},{x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.mirror",n1:135,n2:0,mi:false},{x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"this.mirror",n1:135,n2:0,mi:false},{x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},{x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+            //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
+            this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:226,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:0,n2:0,mi:false},{x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},{x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:301,y:290,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:-90,n2:0,mi:false},{x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},{x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
                     {x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false}];
                     
             }
@@ -139,47 +194,57 @@ class Platformer extends Phaser.Scene {
             }
             return a;
         }
-        this.color = function(r, g, b){
-            return "0x" + this.hex(r) + this.hex(g) + this.hex(b);
+        this.color = function(r, g, b, a = 255){
+            return {rgb: "0x" + this.hex(r) + this.hex(g) + this.hex(b), a: a};
         }
         this.Fill = this.color(255, 255, 255);
-        this.Stroke = this.color(255, 0, 0);
+        this.Stroke = this.color(255, 255, 255);
         this.StrokeWeight = 1;
     }
 
     create() {
 
-        this.level(this.CurrentLevel);
+
+
+        this.WKey = this.input.keyboard.addKey("W");
+        this.AKey = this.input.keyboard.addKey("A");
+        this.SKey = this.input.keyboard.addKey("S");
+        this.DKey = this.input.keyboard.addKey("D");
+
+        this.level(this.CurrentLevel, true);
 
         console.log(this.fill);
         this.graphics = this.add.graphics();
 
-        this.fill = function(r, g, b){
-            this.Fill = this.color(r, g, b);
+        this.fill = function(r, g, b, a = 255){
+            this.Fill = this.color(r, g, b, a);
         }
-        this.stroke = function(r, g, b){
-            this.Stroke = this.color(r, g, b);
+        this.stroke = function(r, g, b, a = 255){
+            this.Stroke = this.color(r, g, b, a);
         }
         this.noStroke = function(){
-            //this.StrokeWeight = 0;
+            this.Stroke.a = 0;
         }
+        this.noFill = function(){
+          this.Fill.a = 0;
+      }
         this.strokeWeight = function(num){
             this.StrokeWeight = num;
         }
 
-        this.background = function(r, g, b){
-            let tmpColor = this.color(r, g, b);
+        this.background = function(r, g, b, a = 255){
+            let tmpColor = this.color(r, g, b, a);
             const tmpRect = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
-            this.graphics.lineStyle(1, tmpColor);
-            this.graphics.fillStyle(tmpColor);
+            this.graphics.lineStyle(1, tmpColor.rgb, tmpColor.a/255);
+            this.graphics.fillStyle(tmpColor.rgb, tmpColor.a/255);
             this.graphics.strokeRectShape(tmpRect);
             this.graphics.fillRectShape(tmpRect);
         }
 
         this.triangle = function(x1, y1, x2, y2, x3, y3){
             const tmpTri = new Phaser.Geom.Triangle(x1, y1, x2, y2, x3, y3);
-            this.graphics.lineStyle(this.StrokeWeight, this.Stroke);
-            this.graphics.fillStyle(this.Fill);
+            this.graphics.lineStyle(this.StrokeWeight, this.Stroke.rgb, this.Stroke.a/255);
+            this.graphics.fillStyle(this.Fill.rgb, this.Fill.a/255);
             this.graphics.strokeTriangleShape(tmpTri);
             this.graphics.fillTriangleShape(tmpTri);
         }
@@ -187,17 +252,154 @@ class Platformer extends Phaser.Scene {
 
         this.line = function(x1, y1, x2, y2){
             const tmpLine = new Phaser.Geom.Line(x1, y1, x2, y2);
-            this.graphics.lineStyle(this.StrokeWeight, this.Stroke);
+            this.graphics.lineStyle(this.StrokeWeight, this.Stroke.rgb, this.Stroke.a/255);
             this.graphics.strokeLineShape(tmpLine);
         }
         this.rect = function(x, y, w, h){
-            console.log("rect");
+            //console.log("rect");
             const tmpRect = new Phaser.Geom.Rectangle(x, y, w, h);
-            this.graphics.lineStyle(this.StrokeWeight, this.Stroke);
-            this.graphics.fillStyle(this.Fill);
+            this.graphics.lineStyle(this.StrokeWeight, this.Stroke.rgb, this.Stroke.a/255);
+            this.graphics.fillStyle(this.Fill.rgb, this.Fill.a/255);
             this.graphics.strokeRectShape(tmpRect);
             this.graphics.fillRectShape(tmpRect);
         }
+
+        this.lineS = function(x1,y1,x2,y2,x3,y3,x4,y4){
+          var a = y2 - y1;
+          var b = x2 - x1;
+          var h = x1;
+          var k = y1;
+          var c = y4 - y3;
+          var d = x4 - x3;
+          var j = x3;
+          var l = y3;
+          this.noFill();
+          var x = ((-c*j*b)+(d*l*b)+(a*d*h)-(d*k*b))/((a*d)-(c*b));
+          //this.fill(0, 0, 0);
+          //this.noFill();
+          //this.rect(x1 - this.X,y1 - this.Y,5,5);
+          return {x:x,y:(c/d)*(x-j)+l,t:((Math.round(this.dist(x1,y1,x,(c/d)*(x-j)+l) + this.dist(x2,y2,x,(c/d)*(x-j)+l)) === Math.round(this.dist(x1,y1,x2,y2))) && (Math.round(this.dist(x3,y3,x,(c/d)*(x-j)+l) + this.dist(x4,y4,x,(c/d)*(x-j)+l)) === Math.round(this.dist(x3,y3,x4,y4))))};
+          //ellipse(x2,y2,5,5);
+        };
+      //converts a this.line into an angle
+        this.angLine = function(x1,y1,x2,y2){
+          return this.atan2(y2-y1, x2-x1);
+          //var t = 0;
+          //if(x2 >= x1){
+          //  t = this.atan((y2 - y1)/(x2 - x1)) + 90;
+          //}
+          //else{
+          //  t = this.atan((y2 - y1)/(x2 - x1)) + 180 + 90;
+          //}
+          //return t - 90;
+        };
+      //logic and drawing of this.mirrors
+        this.drawMirrors = function(){
+          for(var i = 0; i < this.mirror.length;i++){
+            //moves this.mirror to conected blocks coordinates
+            if(this.rects[this.mirror[i].c].type === "mirror"){
+              this.mirror[i].x = this.rects[this.mirror[i].c].x + this.mirror[i].tx;
+              this.mirror[i].y = this.rects[this.mirror[i].c].y + this.mirror[i].ty;
+              this.mirror[i].a = this.rects[this.mirror[i].c].n1;
+            }
+            else{
+              this.mirror[i].x = this.rects[this.mirror[i].c].x + this.mirror[i].tx;
+              this.mirror[i].y = this.rects[this.mirror[i].c].y + this.mirror[i].ty;
+              //this.mirror[i].a = this.rects[this.mirror[i].c].n1;
+            }
+            //draw this.mirror
+            this.stroke(255, 255, 255);
+            this.line(this.mirror[i].x - (this.cos(this.mirror[i].a)*this.mirror[i].l) - this.X,this.mirror[i].y - (this.sin(this.mirror[i].a)*this.mirror[i].l) - this.Y,this.mirror[i].x + (this.cos(this.mirror[i].a)*this.mirror[i].l) - this.X,this.mirror[i].y + (this.sin(this.mirror[i].a)*this.mirror[i].l) - this.Y);
+          }
+        };
+      //logic and drawing of lasers
+        this.lazers = function(){
+          for(var i = 0; i < this.lazer.length;i++){
+            //move this.lazer to connected block
+            if(this.lazer[i].c !== -1){
+              this.lazer[i].x = this.rects[this.lazer[i].c].x;
+              this.lazer[i].y = this.rects[this.lazer[i].c].y;
+              this.lazer[i].a = this.rects[this.lazer[i].c].n1;
+            }
+            var x = 0;
+            var y = 0;
+            var snum = 9999999;
+            //find closest this.mirror
+            for(var o = 0; o < this.mirror.length;o++){
+              if(o !== this.lazer[i].nb){
+                var xy = this.lineS(this.lazer[i].x,this.lazer[i].y,this.lazer[i].x + (this.cos(this.lazer[i].a)*99999999),this.lazer[i].y + (this.sin(this.lazer[i].a)*99999999),this.mirror[o].x - (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y - (this.sin(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].x + (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y + (this.sin(this.mirror[o].a)*this.mirror[o].l));
+                if(xy.t && this.dist(xy.x,xy.y,this.lazer[i].x,this.lazer[i].y) < snum){
+                  snum = this.dist(xy.x,xy.y,this.lazer[i].x,this.lazer[i].y);
+                }
+              }
+            }
+            var lazertf = false;
+            //reflection logic
+            for(var o = 0; o < this.mirror.length;o++){
+              this.mirror[o].b = false;
+              var xy = this.lineS(this.lazer[i].x,this.lazer[i].y,this.lazer[i].x + (this.cos(this.lazer[i].a)*99999999),this.lazer[i].y + (this.sin(this.lazer[i].a)*99999999),this.mirror[o].x - (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y - (this.sin(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].x + (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y + (this.sin(this.mirror[o].a)*this.mirror[o].l));
+              if(o !== this.lazer[i].nb){
+                if(this.dist(xy.x,xy.y,this.lazer[i].x,this.lazer[i].y) === snum){
+                  this.fill(0, 0, 0);
+                  //ellipse(xy.x - this.X,xy.y - this.Y,5,5);
+                  if(xy.t){
+                    x = xy.x;
+                    y = xy.y;
+                    
+                    var xy2 = this.lineS(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),x - (this.cos(this.lazer[i].a)*20) - (this.sin(this.mirror[o].a)*20),y - (this.sin(this.lazer[i].a)*20) + (this.cos(this.mirror[o].a)*20),this.mirror[o].x - (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y - (this.sin(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].x + (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y + (this.sin(this.mirror[o].a)*this.mirror[o].l));
+                    
+                    if(xy.t){
+                      lazertf = true;
+                      this.mirror[o].b = true;
+                    }
+                    
+                    //ellipse(x - (this.cos(this.lazer[i].a)*20) - this.X,y - (this.sin(this.lazer[i].a)*20) - this.Y,5,5);
+                    //this.line(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),x - (this.cos(this.lazer[i].a)*20) - (this.sin(this.mirror[o].a)*20),y - (this.sin(this.lazer[i].a)*20) + (this.cos(this.mirror[o].a)*20));
+                    //ellipse(xy2.x,xy2.y,5,5);
+                    var x3 = x - (this.cos(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y));
+                    var y3 = y - (this.sin(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y));
+                    if(Math.round(x3) === Math.round(xy2.x) && Math.round(y3) === Math.round(xy2.y)){
+                      x3 = x - (this.cos(this.mirror[o].a)*-this.dist(x,y,xy2.x,xy2.y));
+                      y3 = y - (this.sin(this.mirror[o].a)*-this.dist(x,y,xy2.x,xy2.y));
+                    }
+                    //ellipse(x3,y3,5,5);
+                    var x4 = x3 + (this.sin(this.mirror[o].a)*this.dist(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),xy2.x,xy2.y));
+                    var y4 = y3 - (this.cos(this.mirror[o].a)*this.dist(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),xy2.x,xy2.y));
+                    
+                    if(this.lineS(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),x4,y4,this.mirror[o].x - (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y - (this.sin(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].x + (this.cos(this.mirror[o].a)*this.mirror[o].l),this.mirror[o].y + (this.sin(this.mirror[o].a)*this.mirror[o].l)).t){
+                      x4 = x3 + (this.sin(this.mirror[o].a)*-this.dist(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),xy2.x,xy2.y));
+                      y4 = y3 - (this.cos(this.mirror[o].a)*-this.dist(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),xy2.x,xy2.y));
+                    }
+                    //ellipse(x4,y4,5,5);
+                    //ellipse(x - (this.cos(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y)) + (this.sin(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y)),y - (this.sin(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y)) - (this.cos(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y)),5,5);
+                    ////important
+                    var a = this.angLine(x,y,x4,y4);
+                    this.stroke(255, 0, 255);
+                    //this.line(x,y,x + this.cos(a)*20,y + this.sin(a)*20);
+                    //this.line(x,y,x4,y4);
+                    if(this.mirror[o].r === true){
+                      if(this.lazer[i].t === false){
+                        this.lazer.push({x:x,y:y,a:a,t:false,nb:o,gr:this.lazer[i].gr,c:-1});
+                        //ellipse(x - this.X,y - this.Y,5,5);
+                        this.lazer[i].t = true;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            //draw this.lazer
+            this.stroke(255, 0, 0);
+            if(lazertf){
+              this.line(this.lazer[i].x - this.X,this.lazer[i].y - this.Y,this.lazer[i].x + (this.cos(this.lazer[i].a)*this.dist(this.lazer[i].x,this.lazer[i].y,x,y)) - this.X,this.lazer[i].y + (this.sin(this.lazer[i].a)*this.dist(this.lazer[i].x,this.lazer[i].y,x,y)) - this.Y);
+            }
+            else{
+              this.line(this.lazer[i].x - this.X,this.lazer[i].y - this.Y,this.lazer[i].x + (this.cos(this.lazer[i].a)*10000) - this.X,this.lazer[i].y + (this.sin(this.lazer[i].a)*10000) - this.Y);
+            }
+          }
+          
+        };
+
         this.blocks = function(){
             for(var i = 0; i < this.rects.length;i++){
               //restrict width and hight of blocks
@@ -220,15 +422,15 @@ class Platformer extends Phaser.Scene {
                   this.dead = true;
                 }
                 //movement
-                // if(keyIsPressed && (keys[68] === true || keys[39] === true)){
-                //   this.rects[i].ax = 2;
-                // }
-                // if(keyIsPressed && (keys[65] === true || keys[37] === true)){
-                //   this.rects[i].ax = -2;
-                // }
-                // if(keyIsPressed && (keys[87] || keys[32] || keys[38] === true) && this.rects[i].HitDown === true){
-                //   this.rects[i].ay =  -3;
-                // }
+                if(this.DKey.isDown/*keyIsPressed && (keys[68] === true || keys[39] === true)*/){
+                   this.rects[i].ax = 2;
+                }
+                if(this.AKey.isDown/*keyIsPressed && (keys[65] === true || keys[37] === true)*/){
+                  this.rects[i].ax = -2;
+                }
+                if(this.WKey.isDown/*keyIsPressed && (keys[87] || keys[32] || keys[38] === true)*/ && this.rects[i].HitDown === true){
+                  this.rects[i].ay =  -3;
+                }
                 //this.rects[i].ax *= 0.8;
                 this.rects[i].HitDown = false;
                 //collision logic
@@ -501,13 +703,13 @@ class Platformer extends Phaser.Scene {
                     this.dead = true;
                   }
                   //stop this.draging if key is pressed
-                //   if(keyIsPressed){
-                //     this.dragi = -1;
-                //   }
+                  if(this.WKey.isDown || this.AKey.isDown || this.DKey.isDown/*keyIsPressed*/){
+                    this.dragi = -1;
+                  }
                   //move when draged
                   if(this.dragi === i){
                     if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0 && this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed < this.maxSpeed){
-                      this.rects[i].ax = -(this.rects[i].x - this.X - mousethis.X)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed);
+                      this.rects[i].ax = -(this.rects[i].x - this.X - this.mouseX)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed);
                       this.rects[i].ay = -(this.rects[i].y - this.Y - this.mouseY)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed);
                     }
                     else if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0){
@@ -515,11 +717,21 @@ class Platformer extends Phaser.Scene {
                       this.rects[i].ay = -(this.rects[i].y - this.Y - this.mouseY)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.maxSpeed);
                     }
                   }
+                  // if(this.dragi === i){
+                  //   if(dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0 && this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed < this.maxSpeed){
+                  //     this.rects[i].ax = -(this.rects[i].x - this.X - this.mouseX)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed);
+                  //     this.rects[i].ay = -(this.rects[i].y - this.Y - this.mouseY)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed);
+                  //   }
+                  //   else if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0){
+                  //     this.rects[i].ax = -(this.rects[i].x - this.X - this.mouseX)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(maxSpeed);
+                  //     this.rects[i].ay = -(this.rects[i].y - this.Y - this.mouseY)/this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)*(maxSpeed);
+                  //   }
+                  // }
                   //if clicked on set deagi to its position in this.rects
                   if(this.mouseIsPressed && this.rects[i].HitDown && this.dragi === -1 && this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
                     this.dragi = i;
                   }  
-                  //if not pressing the mouse, stop this.draging
+                  //if not presthis.sing the mouse, stop this.draging
                   if(this.mouseIsPressed === false){
                     this.dragi = -1;
                   }
@@ -769,9 +981,9 @@ class Platformer extends Phaser.Scene {
                   this.dead = true;
                 }
                 //dond drag when a key is pressed
-                // if(keyIsPressed){
-                //   this.dragi = -1;
-                // }
+                if(this.WKey.isDown || this.AKey.isDown || this.DKey.isDown/*keyIsPressed*/){
+                  this.dragi = -1;
+                }
                 //move when draged
                 if(this.dragi === i){
                   if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0 && this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed < this.maxSpeed){
@@ -839,7 +1051,7 @@ class Platformer extends Phaser.Scene {
             for(var i = 0; i < this.rects.length;i++){
               this.stroke(0, 0, 0);
               //logic and drawing of the laser boxes
-              if(this.rects[i].type === "this.lazer"){
+              if(this.rects[i].type === "lazer"){
                 //create it's laser
                 if(this.rects[i].n2 === 0){
                   this.lazer.push({x:211,y:278,a:180,t:false,nb:-1,gr:this.lazer.length,c:i});
@@ -852,9 +1064,9 @@ class Platformer extends Phaser.Scene {
                   this.dead = true;
                 }
                 //dont drag if a key is pressed
-                // if(keyIsPressed){
-                //   this.dragi = -1;
-                // }
+              if(this.WKey.isDown || this.AKey.isDown || this.DKey.isDown/*keyIsPressed*/){
+                  this.dragi = -1;
+                }
                 //move when linked
                 if(this.dragi === i){
                   if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0 && this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed < this.maxSpeed){
@@ -924,11 +1136,11 @@ class Platformer extends Phaser.Scene {
             for(var i = 0; i < this.rects.length;i++){
               this.stroke(0, 0, 0);
               //logic and drawing of the this.mirror boxes
-              if(this.rects[i].type === "this.mirror"){
+              if(this.rects[i].type === "mirror"){
                 //create it's this.mirror
                 if(this.rects[i].mi === false){
-                  //this.mirror.push({x:304,y:266,l:sqrt(200),a:45,c:i});
-                  this.mirror.push({x:304,y:266,l:sqrt(200),a:45,c:i,r:true,tx:0,ty:0,b:false});
+                  //this.mirror.push({x:304,y:266,l:Math.sqrt(200),a:45,c:i});
+                  this.mirror.push({x:304,y:266,l:Math.sqrt(200),a:45,c:i,r:true,tx:0,ty:0,b:false});
                   this.rects[i].mi = true;
                 }
                 //implement this.gravity
@@ -938,9 +1150,9 @@ class Platformer extends Phaser.Scene {
                   this.dead = true;
                 }
                 //if a key is pressed, dont drag
-                // if(keyIsPressed){
-                //   this.dragi = -1;
-                // }
+                if(this.WKey.isDown || this.AKey.isDown || this.DKey.isDown/*keyIsPressed*/){
+                  this.dragi = -1;
+                }
                 //move when draged
                 if(this.dragi === i){
                   if(this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY) !== 0 && this.dist(this.rects[i].x - this.X,this.rects[i].y - this.Y,this.mouseX,this.mouseY)/this.mspeed < this.maxSpeed){
@@ -1009,12 +1221,12 @@ class Platformer extends Phaser.Scene {
             }
             for(var i = 0; i < this.rects.length;i++){
               this.stroke(0, 0, 0);
-              //logic and drawing of the laser sensing boxes
+              //logic and drawing of the laser senthis.sing boxes
               if(this.rects[i].type === "sense"){
                 //create its this.mirror
                 if(this.rects[i].mi === false){
-                  //this.mirror.push({x:304,y:266,l:sqrt(200),a:45,c:i});
-                  this.mirror.push({x:304,y:266,l:sqrt(200),a:45,c:i,r:true,tx:0,ty:0,b:false});
+                  //this.mirror.push({x:304,y:266,l:Math.sqrt(200),a:45,c:i});
+                  this.mirror.push({x:304,y:266,l:Math.sqrt(200),a:45,c:i,r:true,tx:0,ty:0,b:false});
                   this.rects[i].mi = true;
                 }
                 
@@ -1230,7 +1442,20 @@ class Platformer extends Phaser.Scene {
             }
             
           };
-          console.log(this.rects);
+          //logic and drawing of the no magic zones
+        this.noMagicZone = function(draw){
+          for(var i = 0; i < this.noMagic.length;i++){
+            this.stroke(179, 0, 0,200);
+            this.fill(255, 0, 0,80);
+            if(this.mouseIsPressed && this.mouseX > this.noMagic[i].x - this.X && this.mouseX < this.noMagic[i].x - this.X + this.noMagic[i].w && this.mouseY > this.noMagic[i].y - this.Y && this.mouseY < this.noMagic[i].y - this.Y + this.noMagic[i].h){
+              this.dragi = -1;
+            }
+            if(draw){
+              this.rect(this.noMagic[i].x - this.X,this.noMagic[i].y - this.Y,this.noMagic[i].w,this.noMagic[i].h);
+            }
+          }
+        };
+          //console.log(this.rects);
 
     }
 
@@ -1240,10 +1465,64 @@ class Platformer extends Phaser.Scene {
         this.graphics.clear();
         this.background(255, 255, 255);
 
+        this.noMagicZone(true);
         this.blocks();
+        this.drawMirrors();
 
-        this.fill(255, 0, 0);
-        //this.rect(30, 30, 30, 30);
+        this.noStroke();
+        this.lazers();
+        for(var i = 0; i < this.lazer.length;i++){
+          this.lazer[i].t = false;
+          if(this.lazer[i].gr !== i){
+            this.lazer.splice(i,1);
+          }
+        }
+        this.lazers();
+        for(var i = 0; i < this.lazer.length;i++){
+          this.lazer[i].t = false;
+          if(this.lazer[i].gr !== i){
+            this.lazer.splice(i,1);
+          }
+        }
+        this.lazers();
+        for(var i = 0; i < this.lazer.length;i++){
+          this.lazer[i].t = false;
+          if(this.lazer[i].gr !== i){
+            this.lazer.splice(i,1);
+          }
+        }
+        this.stroke(255, 0, 0);
+        this.lazers();
+
+
+        this.noMagicZone(true);
+
+        for(var i = 0; i < this.checkPoint.length;i++){
+          for(var o = 0; o < this.rects.length;o++){
+            if(this.rects[o].type === "player" && this.rects[o].x > this.checkPoint[i] - 5 && this.rects[o].x < this.checkPoint[i] + 5){
+              this.respawnX = this.checkPoint[i];
+              this.respawnY = this.rects[o].y;
+              if(i === this.checkPoint.length - 1){
+                this.CurrentLevel++;
+                this.level(this.CurrentLevel, true);
+              }
+            }
+            if(this.rects[o].type !== "player" && this.rects[o].type !== "gated" && this.rects[o].type !== "platform" && this.rects[o].x > this.checkPoint[i] - 5 && this.rects[o].x < this.checkPoint[i] + 5){
+              this.dead = true;
+            }
+          }
+          this.stroke(255, 0, 0,150);
+          this.strokeWeight(10);
+          this.line(this.checkPoint[i] - this.X,0,this.checkPoint[i] - this.X,this.height);
+          this.strokeWeight(1);
+        }
+
+        if(this.dead === true){
+          //frameRate(1);
+          this.dragi = -1;
+          this.dead = false;
+          this.level(this.CurrentLevel, false);
+        }
 
     }
 }
