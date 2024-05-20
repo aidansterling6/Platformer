@@ -29,6 +29,7 @@ let config = {
             }
         }
     },
+    antialias: true,
     width: 1440,
     height: 900,
     scene: [Load, Platformer]
