@@ -12,6 +12,8 @@ class Platformer extends Phaser.Scene {
         //the level the player is on
         this.CurrentLevel = 1;
 
+        this.score = 0;
+
         this.X = 0;
         this.Y = 0;
         this.tmpSprites = [];
@@ -95,6 +97,8 @@ class Platformer extends Phaser.Scene {
         this.helpPoint = [];
         //an array holding all of the blocks
         this.rects = [];
+        //an array holding all gems
+        this.gems = [];
         //an array holding all this.lazers
         this.lazer = [];
         //an array holding all this.mirrors
@@ -120,67 +124,76 @@ class Platformer extends Phaser.Scene {
             if(bReset){
               this.respawnX = 100;
               this.respawnY = 231;
-              // this.respawnX = 800;
-              // this.respawnY = 231;
             }
             this.dead = false;
             this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
             this.noMagic = [{x:646,y:200,w:109,h:40}];
             this.checkPoint = [204,1100,1650,2080,2223];
+            this.gems = [
+              {x:155, y:200, w:10, h:10},
+              {x:560, y:150, w:10, h:10},
+              {x:575, y:150, w:10, h:10},
+              {x:860, y:150, w:10, h:10},
+              {x:875, y:150, w:10, h:10},
+              {x:1200, y:120, w:10, h:10},
+              {x:1215, y:120, w:10, h:10},
+              {x:1650, y:120, w:10, h:10},
+              {x:2108, y:170, w:10, h:10},
+            ];
             this.rects = [
-              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
-              {x:600,y:250 + 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},
-              {x:600,y:113 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:400,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:360,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:380,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},
-              {x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
-              {x:500,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:460,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:480,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},
-              {x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
-              {x:700,y:146,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:660,y:146,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:680,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},
-              {x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
-              {x:1000,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:960,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:980,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-              {x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-              {x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-              {x:1410,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1310,y:140,w:100,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
-              {x:1250,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1370,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1310,y:80,w:140,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},
-              {x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},
-              {x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
-              {x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:1800,y:210 + 5000/2,w:100,h:100 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1700,y:250 + 5000/2,w:100,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-              {x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
-              {x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-              {x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
-              {x:2100,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
-              {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-              {x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
-              {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1700,y:0 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:-460,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:2750,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+              {level: 1, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {level: 1, x:600,y:250 + 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},
+              {level: 1, x:600,y:113 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:400,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:360,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:380,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 1, x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},
+              {level: 1, x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
+              {level: 1, x:500,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:460,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:480,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 1, x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},
+              {level: 1, x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+              {level: 1, x:700,y:146,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:660,y:146,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:680,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 1, x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},
+              {level: 1, x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+              {level: 1, x:1000,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:960,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:980,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 1, x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {level: 1, x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {level: 1, x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {level: 1, x:1410,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1310,y:140,w:100,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
+              {level: 1, x:1250,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1370,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1310,y:80,w:140,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},
+              {level: 1, x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},
+              {level: 1, x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
+              {level: 1, x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 1, x:1800,y:210 + 5000/2,w:100,h:100 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1700,y:250 + 5000/2,w:100,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {level: 1, x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
+              {level: 1, x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {level: 1, x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
+              {level: 1, x:2100,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
+              {level: 1, x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {level: 1, x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
+              {level: 1, x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:1700,y:0 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:-460,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:2750,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
                 ];
                     
                     
@@ -194,44 +207,60 @@ class Platformer extends Phaser.Scene {
             if(bReset){
               // this.respawnX = 49;
               // this.respawnY = 200;
-              this.respawnX = 180;
+              this.respawnX = 100;
               this.respawnY = 200;
             }
             this.dead = false;
             this.helpPoint = [];
             this.noMagic = [{x:220,y:240,w:99,h:40},{x:664,y:84,w:100,h:120}];
             this.checkPoint = [600,819];
+            this.gems = [
+              {x:155, y:150, w:10, h:10},
+              {x:155, y:165, w:10, h:10},
+              {x:155, y:180, w:10, h:10},
+              {x:170, y:150, w:10, h:10},
+              {x:170, y:165, w:10, h:10},
+              {x:170, y:180, w:10, h:10},
+              {x:185, y:150, w:10, h:10},
+              {x:185, y:165, w:10, h:10},
+              {x:185, y:180, w:10, h:10},
+              {x:407, y:180, w:10, h:10},
+              {x:407, y:165, w:10, h:10},
+              {x:407, y:150, w:10, h:10},
+              {x:407, y:135, w:10, h:10},
+              {x:740, y:50, w:10, h:10},
+            ];
             this.rects = [
-              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
-              {x:100,y:250 + 5000/2,w:230,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:212,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:329,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:270,y:290 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:388,y:250 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:468,y:130 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:245,y:60 - 5000/2,w:520,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:335,y:142,w:20,h:140,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:305,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
-              {x:236,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
-              {x:145,y:177,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:5,n2:-1,mi:false},
-              {x:145,y:157,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
-              {x:407,y:233,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-              {x:593,y:130 + 5000/2,w:176,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:683,y:172 + 5000/2,w:20,h:5000 + 104,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:733,y:214 + 5000/2,w:80,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:774,y:134 + 5000/2,w:20,h:5000 + 180,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:695,y:130,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:5,n2:-1,mi:false},
-              {x:624,y:88,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipelum",n1:5,n2:-1,mi:false},
-              {x:827,y:54 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:610,y:-40 - 5000/2,w:240,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:500,y:10 - 5000/2,w:20,h:5000 + 120,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:735,y:-25 - 5000/2,w:20,h:5000 + 50,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:810,y:-10 - 5000/2,w:135,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:-500,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1370,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+              {level: 2, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {level: 2, x:100,y:250 + 5000/2,w:230,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:212,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:329,y:270 + 5000/2,w:20,h:5000 + 60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:270,y:290 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:388,y:250 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:468,y:130 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:245,y:60 - 5000/2,w:520,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:335,y:142,w:20,h:140,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 2, x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:305,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
+              {level: 2, x:236,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
+              {level: 2, x:145,y:177,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:5,n2:-1,mi:false},
+              {level: 2, x:145,y:157,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
+              {level: 2, x:407,y:233,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {level: 2, x:593,y:130 + 5000/2,w:176,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:683,y:172 + 5000/2,w:20,h:5000 + 104,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:733,y:214 + 5000/2,w:80,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:774,y:134 + 5000/2,w:20,h:5000 + 180,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:695,y:130,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:5,n2:-1,mi:false},
+              {level: 2, x:624,y:88,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipelum",n1:5,n2:-1,mi:false},
+              {level: 2, x:827,y:54 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:610,y:-40 - 5000/2,w:240,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:500,y:10 - 5000/2,w:20,h:5000 + 120,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:735,y:-25 - 5000/2,w:20,h:5000 + 50,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:810,y:-10 - 5000/2,w:135,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:-500,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 2, x:1370,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
             ]
                     
                     
@@ -251,42 +280,67 @@ class Platformer extends Phaser.Scene {
             this.checkPoint = [261,474,800];
             this.mirror = [{x:269,y:266,l:1000,a:89.9999,c:1,r:false,tx:-219,ty:0,b:false},{x:335,y:118,l:100,a:89.9999,c:1,r:false,tx:-37,ty:-118,b:false}];
             this.lazer = [];
+            this.gems = [
+              {x:187, y:100, w:10, h:10},
+            ];
             //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
             this.rects = [
-              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
-              {x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:226,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:0,n2:0,mi:false},
-              {x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
-              {x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},
-              {x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:301,y:290 + 5000/2,w:60,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:-90,n2:0,mi:false},
-              {x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
-              {x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
-              {x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
-              {x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},
-              {x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false},
-              {x:90,y:250 + 5000/2,w:400,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:800,y:250 + 5000/2,w:980,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:656,y:-500,w:10000,h:1000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:-512,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1400,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {level: 3, x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:226,y:160 - 5000/2,w:20,h:80 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:0,n2:0,mi:false},
+              {level: 3, x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {level: 3, x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},
+              {level: 3, x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 3, x:301,y:290 + 5000/2,w:60,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:-90,n2:0,mi:false},
+              {level: 3, x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {level: 3, x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {level: 3, x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {level: 3, x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},
+              {level: 3, x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 3, x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {level: 3, x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false},
+              {level: 3, x:90,y:250 + 5000/2,w:400,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:800,y:250 + 5000/2,w:980,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:656,y:-500,w:10000,h:1000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:-512,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 3, x:1400,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               ];
                     
             }
+            if(num === 4){
+              this.dragi = -1;
+              this.gravity = 0.1;
+              this.mspeed = 5;
+              this.maxSpeed = 3;
+              if(bReset){
+                this.respawnX = 0;
+                this.respawnY = 0;
+              }
+              this.dead = false;
+              this.helpPoint = [];
+              this.noMagic = [];
+              this.checkPoint = [];
+              this.mirror = [];
+              this.lazer = [];
+              //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
+              this.rects = [
+                {level: 4, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+                {level: 4, x:0,y:30 + 5000/2,w:10000,h:5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+                ];
+                      
+              }
 
 
             for(let i = 0; i < this.rects.length; i++){
@@ -364,6 +418,11 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].sprite.tileScaleY = 20/tex.height;
               }
             }
+            for(let i = 0; i < this.gems.length; i++){
+              this.gems[i].sprite = this.add.sprite(this.gems[i].w,this.gems.h, "gem");
+              let tex = this.textures.get("gem").getSourceImage();
+              this.gems[i].sprite.scale = 20/tex.height;
+            }
         };
 
 
@@ -391,7 +450,16 @@ class Platformer extends Phaser.Scene {
       this.load.image("pipe4", "Tiles/pipeGreen_24.png");
       this.load.image("tileGrey", "Tiles/tileGrey_01.png");
       this.load.image("tileGrey2", "Tiles/tile_0022.png");
-      this.load.image("background", "Tiles//Marble/tile_0070.png");
+      this.load.image("background", "Tiles/Marble/tile_0070.png");
+      this.load.image("gem", "Tiles/platformPack_item001.png");
+      //platformPack_item001.png
+
+      this.load.audio('jump', [ 'Sound/impactSoft_heavy_001.ogg' ]);
+      this.load.audio('land', [ 'Sound/impactSoft_medium_000.ogg' ]);
+      this.load.audio('walk', [ 'Sound/footstep_concrete_001.ogg' ]);
+      this.load.audio('gem', [ 'Sound/toggle_002.ogg' ]);
+      //impactSoft_medium_000.ogg
+      //footstep_concrete_001.ogg
       //tile_0070.png
       //tile_0022.png
       //pipeGreen_36.png
@@ -404,11 +472,33 @@ class Platformer extends Phaser.Scene {
       this.cameras.main.setZoom(this.SCALE);
 
 
+      this.jumpSound = this.sound.add("jump");
+      this.jumpSound.loop = false;
+      this.jumpSound.volume = 1.0;
+
+      this.landSound = this.sound.add("land");
+      this.landSound.loop = false;
+      this.landSound.volume = 1.0;
+
+      this.walkSound = this.sound.add("walk");
+      this.walkSound.loop = true;
+      this.walkSound.volume = 1.0;
+      this.walkSound.setRate(0.7);
+
+      this.gemSound = this.sound.add("gem");
+      this.gemSound.loop = false;
+      this.gemSound.volume = 1.0;
+
+      this.win = this.add.text(0, 0, 'You Won!!!, press enter to restart the game', { fontFamily: 'Arial', fontSize: 24, color: '#ffffff' });
+
+      this.scoreText = this.add.text(0, 0, 'Score: 0', { fontFamily: 'Arial', fontSize: 15, color: '#ffffff' });
+
 
         this.WKey = this.input.keyboard.addKey("W");
         this.AKey = this.input.keyboard.addKey("A");
         this.SKey = this.input.keyboard.addKey("S");
         this.DKey = this.input.keyboard.addKey("D");
+        this.EnterKey = this.input.keyboard.addKey("Enter");
         this.start = true;
 
         console.log(this.fill);
@@ -602,6 +692,26 @@ class Platformer extends Phaser.Scene {
 
         this.blocks = function(){
             for(var i = 0; i < this.rects.length;i++){
+              if(this.rects[i].sprite){
+                this.rects[i].sprite.visible = true;
+              }
+              if(this.rects[i].sprite1){
+                this.rects[i].sprite1.visible = true;
+              }
+              if(this.rects[i].sprite2){
+                this.rects[i].sprite2.visible = true;
+              }
+              if(this.rects[i].level !== this.CurrentLevel){
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.visible = false;
+                }
+                if(this.rects[i].sprite1){
+                  this.rects[i].sprite1.visible = false;
+                }
+                if(this.rects[i].sprite1){
+                  this.rects[i].sprite1.visible = false;
+                }
+              }
               //restrict width and hight of blocks
               if(this.rects[i].h <= 0){
                 this.rects[i].h = 2;
@@ -616,8 +726,8 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].ay += this.gravity;
                 this.rects[i].lx = this.rects[i].x;
                 //move camera to block
-                this.player.x = this.rects[i].x;
-                this.player.y = this.rects[i].y - 2;
+                this.player.x = this.rects[i].x - this.X;
+                this.player.y = this.rects[i].y - 2 - this.Y;
                 ////////////////////////////////this.X = this.rects[i].x - (this.width/2);
                 ////////////////////////////////this.Y = this.rects[i].y - (this.height/2);
                 //if you fall, die
@@ -641,6 +751,7 @@ class Platformer extends Phaser.Scene {
                 let pj = this.rects[i].HitDown;
                 if(this.WKey.isDown/*keyIsPressed && (keys[87] || keys[32] || keys[38] === true)*/ && this.rects[i].HitDown === true){
                   this.rects[i].ay =  -3;
+                  this.jumpSound.play();
                   this.jumping.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, false);
                   this.jumping.setParticleSpeed(0, -40);
 
@@ -657,6 +768,15 @@ class Platformer extends Phaser.Scene {
                 //this.rects[i].ax *= 0.8;
                 this.rects[i].HitDown = false;
                 //collision logic
+                for(var o = 0; o < this.gems.length;o++){
+                  if(this.rects[i].x - this.rects[i].w/2 < this.gems[o].x + this.gems[o].w/2 && this.rects[i].x + this.rects[i].w/2 > this.gems[o].x - this.gems[o].w/2 && this.rects[i].y - this.rects[i].h/2 < this.gems[o].y + this.gems[o].h/2 && this.rects[i].y + this.rects[i].h/2 > this.gems[o].y - this.gems[o].h/2){
+                    this.gems[o].sprite.destroy();
+                    this.gems.splice(o, 1);
+                    this.gemSound.play();
+                    this.score++;
+                    o--;
+                  }
+                }
                 for(var o = 0; o < this.rects.length;o++){
                   if(i !== o && this.rects[i].y < this.rects[o].y && this.rects[i].y + this.rects[i].ay > this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
                     this.rects[i].ay = this.rects[i].ay * -0;
@@ -689,6 +809,7 @@ class Platformer extends Phaser.Scene {
                 if(pj != this.rects[i].HitDown && this.rects[i].HitDown){
                   this.jumping.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, false);
                   this.jumping.setParticleSpeed(0, -40);
+                  this.landSound.play();
 
                     // Only play smoke effect if touching the ground
 
@@ -716,9 +837,10 @@ class Platformer extends Phaser.Scene {
                     // Only play smoke effect if touching the ground
 
                     if (this.rects[i].HitDown) {
-
+                      if(!this.walkSound.isPlaying){
+                        this.walkSound.play();
+                      }
                       this.walking.start();
-
                     }
                  }
                  if(this.AKey.isDown){
@@ -731,22 +853,27 @@ class Platformer extends Phaser.Scene {
                     // Only play smoke effect if touching the ground
 
                     if (this.rects[i].HitDown) {
-
+                      if(!this.walkSound.isPlaying){
+                        this.walkSound.play();
+                      }
                       this.walking.start();
 
                     }
                  }
+                 this.walkSound.setRate(0.3 + (Math.abs(this.rects[i].lx - this.rects[i].x)*0.2));
                 }
                 else {
                   this.player.anims.play('idle');
+                  this.walkSound.stop();
                 }
+
 
                 if(this.rects[i].ax === 0 && this.rects[i].ay === 0){
                   //this.player.anims.play('idle');
                 }
                 if(!this.rects[i].HitDown){
                   this.player.anims.play('jump');
-
+                  this.walkSound.stop();
                 }
                 //draw player
                 //this.fill(255, 0, 0);
@@ -959,21 +1086,25 @@ class Platformer extends Phaser.Scene {
                     if(i !== o && ((link1 === "u" && this.rects[i].n2 === 2) || (link2 === "u" && this.rects[i].n2 === 1)) && this.rects[i].y - (this.rects[i].h/2) - 10 <= this.rects[o].y + (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) >= this.rects[o].y + (this.rects[o].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
                       //if(link1 !== link2){
                       this.rects[o].ay = -4;
+                      this.jumpSound.play();
                       //}
                     }
                     if(i !== o && ((link1 === "d" && this.rects[i].n2 === 2) || (link2 === "d" && this.rects[i].n2 === 1)) && this.rects[i].y + (this.rects[i].h/2) + 10 >= this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y + (this.rects[i].h/2) <= this.rects[o].y - (this.rects[o].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
                       //if(link1 !== link2){
                       this.rects[o].ay = 4;
+                      this.jumpSound.play();
                       //}
                     }
                     if(i !== o && ((link1 === "l" && this.rects[i].n2 === 2) || (link2 === "l" && this.rects[i].n2 === 1)) && this.rects[i].x - (this.rects[i].w/2) - 10 <= this.rects[o].x + (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) >= this.rects[o].x + (this.rects[o].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
                       //if(link1 !== link2){
                       this.rects[o].ax = -10;
+                      this.jumpSound.play();
                       //}
                     }
                     if(i !== o && ((link1 === "r" && this.rects[i].n2 === 2) || (link2 === "r" && this.rects[i].n2 === 1)) && this.rects[i].x + (this.rects[i].w/2) + 10 >= this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x + (this.rects[i].w/2) <= this.rects[o].x - (this.rects[o].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
                       //if(link1 !== link2){
                       this.rects[o].ax = 10;
+                      this.jumpSound.play();
                       //}
                     }
                   }
@@ -1801,7 +1932,7 @@ class Platformer extends Phaser.Scene {
           alpha: {start: 1, end: 0.0}, 
       });
       this.jumping = this.add.particles(0, 0, "kenny-particles", {
-        frame: ['smoke_07.png', 'smoke_19.png'],
+        frame: ['smoke_07.png', 'smoke_09.png'],
         // TODO: Try: add random: true
         random: true,
         scale: {start: 0.03*0.6, end: 0.1},
@@ -1821,12 +1952,24 @@ class Platformer extends Phaser.Scene {
       this.width = this.sys.game.canvas.width;
       this.height = this.sys.game.canvas.height;
       this.cameras.main.setViewport(0, 0, this.width, this.height);
-      this.cameras.main.startFollow(this.player, true, 0.25, 0.25); // (target, [,roundPixels][,lerpX][,lerpY])
+      this.cameras.main.startFollow(this.player, false, 0.25, 0.25, 0, 100); // (target, [,roundPixels][,lerpX][,lerpY])
       this.cameras.main.setDeadzone(50, 50);
       this.cameras.main.setZoom(this.SCALE);
 
       this.mouseX = this.player.x + (game.input.mousePointer.x - this.width/2) / this.SCALE;
-      this.mouseY = this.player.y + (game.input.mousePointer.y - this.height/2) / this.SCALE;
+      this.mouseY = -100 + this.player.y + (game.input.mousePointer.y - this.height/2) / this.SCALE;
+
+      for(let i = 0; i < this.gems.length; i++){
+        this.gems[i].sprite.x = this.gems[i].x;
+        this.gems[i].sprite.y = this.gems[i].y;
+      }
+
+      this.scoreText.text = "Score: " + this.score;
+      this.scoreText.x = this.player.x + 200;
+      this.scoreText.y = this.player.y-270;
+      this.scoreText.setOrigin(0.5, 0.5);
+      this.scoreText.visible = true;
+      this.scoreText.depth = 1000;
 
       //this.player.x = this.width/2;
       //this.player.y = this.height/2 - 2;
@@ -1906,7 +2049,8 @@ class Platformer extends Phaser.Scene {
           }
           this.stroke(255, 0, 0,150);
           this.strokeWeight(10);
-          this.line(this.checkPoint[i] - this.X,0,this.checkPoint[i] - this.X,this.height);
+          this.player.x - this.width/2, this.player.y - this.height/2, this.width, this.height
+          this.line(this.checkPoint[i] - this.X,this.player.y - this.height/2,this.checkPoint[i] - this.X,this.player.y + this.height/2);
           this.strokeWeight(1);
         }
 
@@ -1917,8 +2061,20 @@ class Platformer extends Phaser.Scene {
           this.level(this.CurrentLevel, false);
         }
         //this.add.sprite(100, 100, "metal")h
+        this.win.visible = false;
         if(this.CurrentLevel > 3){
           this.background(0, 0, 0);
+          this.win.x = this.player.x;
+          this.win.y = this.player.y - 150;
+          this.win.setOrigin(0.5, 0.5);
+          this.win.visible = true;
+          this.win.depth = 1000;
+          if(this.EnterKey.isDown){
+            this.CurrentLevel = 1;
+            this.win.visible = false;
+            this.score = 0;
+            this.level(this.CurrentLevel, true);
+          }
           //you won
         }
     }
