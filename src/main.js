@@ -29,9 +29,18 @@ let config = {
             }
         }
     },
+    fps: {
+        target: 90,
+        forceSetTimeOut: true
+    },
     antialias: true,
-    width: 1440,
-    height: 900,
+    // width: 1440,
+    // height: 900,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+        // ...
+    },
     scene: [Load, Platformer]
 }
 

@@ -4,7 +4,7 @@ class Platformer extends Phaser.Scene {
     }
 
     init() {
-        this.SCALE = 0.1;
+        this.SCALE = 2;
         this.width = config.width;
         this.height = config.height;
         //the level the player is on
@@ -47,8 +47,11 @@ class Platformer extends Phaser.Scene {
         });
 
         this.mouseMoved = this.input.on('pointermove', (pointer) => {
-            this.mouseX = pointer.x;
-            this.mouseY = pointer.y;
+            let tmp = 0;
+            let dw = this.width - (this.width*this.SCALE)
+            let dh = this.height - (this.height*this.SCALE)
+            this.mouseX = ((pointer.x - dw*0.5)/(this.width*this.SCALE)) * this.width;
+            this.mouseY = ((pointer.y - dh*0.5)/(this.height*this.SCALE)) * this.height;
         });
 
 
@@ -111,10 +114,10 @@ class Platformer extends Phaser.Scene {
             this.mspeed = 5;
             this.maxSpeed = 3;
             if(bReset){
-              this.respawnX = 100;
-              this.respawnY = 231;
-              // this.respawnX = 1500;
+              // this.respawnX = 100;
               // this.respawnY = 231;
+              this.respawnX = 1500;
+              this.respawnY = 231;
             }
             this.dead = false;
             this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
@@ -308,6 +311,12 @@ class Platformer extends Phaser.Scene {
             }
             for(let i = 0; i < this.rects.length; i++){
               this.rects[i].sprite = null;
+              if(this.rects[i].type.substring(0, 4) === "gate"){
+                this.rects[i].sprite = this.add.tileSprite(0, 0,this.rects[i].w,this.rects[i].h, "metal");
+                let tex = this.textures.get("metal").getSourceImage();
+                this.rects[i].sprite.tileScaleX = 20/tex.width;
+                this.rects[i].sprite.tileScaleY = 20/tex.height;
+              }
               if(this.rects[i].type === "platform"){
                 this.rects[i].sprite = this.add.tileSprite(0, 0,this.rects[i].w,this.rects[i].h, "metal");
                 let tex = this.textures.get("metal").getSourceImage();
@@ -345,6 +354,10 @@ class Platformer extends Phaser.Scene {
     }
 
     create() {
+
+      //this.cameras.main.startFollow(my.sprite.player, true, 0.25, 0.25); // (target, [,roundPixels][,lerpX][,lerpY])
+      //this.cameras.main.setDeadzone(50, 50);
+      this.cameras.main.setZoom(this.SCALE);
 
 
 
@@ -1483,8 +1496,12 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].y += this.rects[i].ay;
                 this.rects[i].x += this.rects[i].ax;
                 //draw
-                this.fill(0, 150, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                //this.fill(0, 150, 0);
+                //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.x = this.rects[i].x  - this.X;
+                  this.rects[i].sprite.y = this.rects[i].y - this.Y;
+                }
                 //if hovered over, draw a line to conections
                 if(this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
                   for(var o = 0; o < this.rects.length;o++){
@@ -1520,8 +1537,12 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].ax *= 0;
                 this.rects[i].y += this.rects[i].ay;
                 this.rects[i].x += this.rects[i].ax;
-                this.fill(0, 150, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                // this.fill(0, 150, 0);
+                // this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.x = this.rects[i].x  - this.X;
+                  this.rects[i].sprite.y = this.rects[i].y - this.Y;
+                }
                 if(this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
                   for(var o = 0; o < this.rects.length;o++){
                     if((this.rects[o].type === "button" || this.rects[o].type === "sense") && this.rects[o].n1 === i){
@@ -1556,8 +1577,12 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].ay *= 0;
                 this.rects[i].y += this.rects[i].ay;
                 this.rects[i].x += this.rects[i].ax;
-                this.fill(0, 150, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                // this.fill(0, 150, 0);
+                // this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.x = this.rects[i].x  - this.X;
+                  this.rects[i].sprite.y = this.rects[i].y - this.Y;
+                }
                 if(this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
                   for(var o = 0; o < this.rects.length;o++){
                     if((this.rects[o].type === "button" || this.rects[o].type === "sense") && this.rects[o].n1 === i){
@@ -1592,8 +1617,12 @@ class Platformer extends Phaser.Scene {
                 this.rects[i].ay *= 0;
                 this.rects[i].y += this.rects[i].ay;
                 this.rects[i].x += this.rects[i].ax;
-                this.fill(0, 150, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                // this.fill(0, 150, 0);
+                // this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.x = this.rects[i].x  - this.X;
+                  this.rects[i].sprite.y = this.rects[i].y - this.Y;
+                }
                 if(this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
                   for(var o = 0; o < this.rects.length;o++){
                     if((this.rects[o].type === "button" || this.rects[o].type === "sense") && this.rects[o].n1 === i){
@@ -1624,6 +1653,10 @@ class Platformer extends Phaser.Scene {
     }
 
     update() {
+      this.width = this.sys.game.canvas.width;
+      this.height = this.sys.game.canvas.height;
+      this.cameras.main.setViewport(0, 0, this.width, this.height);
+
 
       // while(this.tmpSprites.length > 0){
       //   this.tmpSprites[0].destroy(true);
@@ -1695,6 +1728,7 @@ class Platformer extends Phaser.Scene {
           this.dead = false;
           this.level(this.CurrentLevel, false);
         }
+        this.rect(this.mouseX, this.mouseY, 10, 10);
         //this.add.sprite(100, 100, "metal")h
 
     }
