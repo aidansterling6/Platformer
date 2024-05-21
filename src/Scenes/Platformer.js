@@ -4,15 +4,15 @@ class Platformer extends Phaser.Scene {
     }
 
     init() {
-        this.SCALE = 2.0;
+        this.SCALE = 0.1;
         this.width = config.width;
         this.height = config.height;
         //the level the player is on
-        this.CurrentLevel = 2;
+        this.CurrentLevel = 1;
 
         this.X = 44;
         this.Y = 0;
-
+        this.tmpSprites = [];
 
         this.toRad = function(degrees){
           return degrees * (Math.PI/180);
@@ -94,6 +94,17 @@ class Platformer extends Phaser.Scene {
         this.mirror = [];
         //sets the level to it's argument
         this.level = function(num, bReset){
+            for(let i = 0; i < this.rects.length; i++){
+              if(this.rects[i].sprite){
+                this.rects[i].sprite.destroy(true);
+              }
+              if(this.rects[i].sprite1){
+                this.rects[i].sprite1.destroy(true);
+              }
+              if(this.rects[i].sprite2){
+                this.rects[i].sprite2.destroy(true);
+              }
+            }
             if(num === 1){
             this.dragi = -1;
             this.gravity = 0.1;
@@ -102,16 +113,65 @@ class Platformer extends Phaser.Scene {
             if(bReset){
               this.respawnX = 100;
               this.respawnY = 231;
+              // this.respawnX = 1500;
+              // this.respawnY = 231;
             }
             this.dead = false;
             this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
             this.noMagic = [{x:646,y:200,w:109,h:40}];
             this.checkPoint = [204,1100,1650,2080,2223];
-            this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:600,y:250,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},{x:600,y:113,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:400,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:360,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:380,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},{x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:6,n2:0,mi:false},{x:500,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:460,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:480,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},{x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},{x:700,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:660,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:680,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},{x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},{x:1000,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:960,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:980,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},{x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,
-                        type:"button",n1:21,n2:0,mi:false},{x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},{x:1410,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1310,y:140,w:98,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},{x:1251,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1369,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1310,y:80,w:138,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},{x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},{x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},{x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:1800,y:210,w:100,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1700,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},{x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},{x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},{x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},{x:2100,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
-                    {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},{x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},{x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}];
+            this.rects = [
+              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {x:600,y:250,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},
+              {x:600,y:113,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:400,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:360,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{
+                x:380,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{
+                  x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},
+                  {x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:6,n2:0,mi:false},
+                  {x:500,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                  {x:460,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                  {x:480,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+                  {x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},
+                  {x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+                  {x:700,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                  {x:660,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                  {x:680,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+                  {x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},
+                  {x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+                  {x:1000,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                  {x:960,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:980,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+                    {x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+                    {x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+                    {x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+                    {x:1410,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1310,y:140,w:98,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
+                    {x:1251,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1369,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1310,y:80,w:138,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},
+                    {x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},
+                    {x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
+                    {x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+                    {x:1800,y:210,w:100,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1700,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+                    {x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
+                    {x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+                    {x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
+                    {x:2100,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+                    {x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
+                    {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+                    {x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
+                    {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+                  ];
                     
                     
                     
@@ -122,10 +182,10 @@ class Platformer extends Phaser.Scene {
             this.mspeed = 5;
             this.maxSpeed = 3;
             if(bReset){
-              // this.respawnX = 49;
-              // this.respawnY = 200;
-              this.respawnX = 600;
-              this.respawnY = 100;
+              this.respawnX = 49;
+              this.respawnY = 200;
+              // this.respawnX = 600;
+              // this.respawnY = 100;
             }
             this.dead = false;
             this.helpPoint = [];
@@ -184,6 +244,77 @@ class Platformer extends Phaser.Scene {
                     {x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false}];
                     
             }
+
+
+            for(let i = 0; i < this.rects.length; i++){
+              this.rects[i].spriteShiftx = 0;
+              this.rects[i].spriteShifty = 0;
+              if(this.rects[i].type === "box"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = this.rects[i].w/tex1.height;
+              }
+              if(this.rects[i].type === "pipeudm"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = 20/tex1.height;
+
+                this.rects[i].sprite2 = this.add.sprite(this.rects[i].w,this.rects[i].h, "pipe1");
+                let tex2 = this.textures.get("pipe1").getSourceImage();
+                this.rects[i].sprite2.scale = 20/tex2.height;
+              }
+              if(this.rects[i].type === "pipeuub"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = 20/tex1.height;
+
+                this.rects[i].sprite2 = this.add.sprite(this.rects[i].w,this.rects[i].h, "pipe1");
+                let tex2 = this.textures.get("pipe1").getSourceImage();
+                this.rects[i].sprite2.scale = 20/tex2.height;
+              }
+              if(this.rects[i].type === "piperrb"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = 20/tex1.height;
+
+                this.rects[i].sprite2 = this.add.sprite(this.rects[i].w,this.rects[i].h, "pipe2");
+                let tex2 = this.textures.get("pipe2").getSourceImage();
+                this.rects[i].sprite2.scale = 20/tex2.width;
+              }
+              if(this.rects[i].type === "pipelum"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = 20/tex1.height;
+
+                this.rects[i].sprite2 = this.add.sprite(this.rects[i].w,this.rects[i].h, "pipe3");
+                let tex2 = this.textures.get("pipe3").getSourceImage();
+                let tmp = 5;
+                this.rects[i].sprite2.scale = (20-tmp)/tex2.height;
+                this.rects[i].spriteShiftx = -tmp/2;
+                this.rects[i].spriteShifty = -tmp/2;
+              }
+              if(this.rects[i].type === "pipedlm"){
+                this.rects[i].sprite1 = this.add.sprite(this.rects[i].w,this.rects[i].h, "tileGrey");
+                let tex1 = this.textures.get("tileGrey").getSourceImage();
+                this.rects[i].sprite1.scale = 20/tex1.height;
+
+                this.rects[i].sprite2 = this.add.sprite(this.rects[i].w,this.rects[i].h, "pipe4");
+                let tex2 = this.textures.get("pipe4").getSourceImage();
+                let tmp = 5;
+                this.rects[i].sprite2.scale = (20-tmp)/tex2.height;
+                this.rects[i].spriteShiftx = -tmp/2;
+                this.rects[i].spriteShifty = tmp/2;
+              }
+            }
+            for(let i = 0; i < this.rects.length; i++){
+              this.rects[i].sprite = null;
+              if(this.rects[i].type === "platform"){
+                this.rects[i].sprite = this.add.tileSprite(0, 0,this.rects[i].w,this.rects[i].h, "metal");
+                let tex = this.textures.get("metal").getSourceImage();
+                this.rects[i].sprite.tileScaleX = 20/tex.width;
+                this.rects[i].sprite.tileScaleY = 20/tex.height;
+              }
+            }
         };
 
 
@@ -202,6 +333,17 @@ class Platformer extends Phaser.Scene {
         this.StrokeWeight = 1;
     }
 
+    preload() {
+      this.load.setPath("./assets/");
+      this.load.image("metal", "Tiles/metalCenter.png");
+      this.load.image("pipe1", "Tiles/pipeGreen_25.png");
+      this.load.image("pipe2", "Tiles/pipeGreen_26.png");
+      this.load.image("pipe3", "Tiles/pipeGreen_36.png");
+      this.load.image("pipe4", "Tiles/pipeGreen_24.png");
+      this.load.image("tileGrey", "Tiles/tileGrey_01.png");
+      //pipeGreen_36.png
+    }
+
     create() {
 
 
@@ -210,8 +352,7 @@ class Platformer extends Phaser.Scene {
         this.AKey = this.input.keyboard.addKey("A");
         this.SKey = this.input.keyboard.addKey("S");
         this.DKey = this.input.keyboard.addKey("D");
-
-        this.level(this.CurrentLevel, true);
+        this.start = true;
 
         console.log(this.fill);
         this.graphics = this.add.graphics();
@@ -353,7 +494,7 @@ class Platformer extends Phaser.Scene {
                       this.mirror[o].b = true;
                     }
                     
-                    //ellipse(x - (this.cos(this.lazer[i].a)*20) - this.X,y - (this.sin(this.lazer[i].a)*20) - this.Y,5,5);
+                    //this.rect(x - (this.cos(this.lazer[i].a)*20) - this.X,y - (this.sin(this.lazer[i].a)*20) - this.Y,5,5);
                     //this.line(x - (this.cos(this.lazer[i].a)*20),y - (this.sin(this.lazer[i].a)*20),x - (this.cos(this.lazer[i].a)*20) - (this.sin(this.mirror[o].a)*20),y - (this.sin(this.lazer[i].a)*20) + (this.cos(this.mirror[o].a)*20));
                     //ellipse(xy2.x,xy2.y,5,5);
                     var x3 = x - (this.cos(this.mirror[o].a)*this.dist(x,y,xy2.x,xy2.y));
@@ -383,6 +524,8 @@ class Platformer extends Phaser.Scene {
                         //ellipse(x - this.X,y - this.Y,5,5);
                         this.lazer[i].t = true;
                       }
+                    } else{
+                      this.rect(x - this.X - 2.5,y - this.Y - 2.5,5,5);
                     }
                   }
                 }
@@ -835,91 +978,102 @@ class Platformer extends Phaser.Scene {
                 }
                 //draw
                 if(link1 === link2){
-                  this.fill(64, 64, 64);
+                  //this.fill(64, 64, 64);
+                  this.stroke(64, 64, 64);
+                  this.fill(255, 255, 255);
                 }
                 else{
-                  this.fill(115, 115, 117);
+                  this.stroke(64, 64, 64);
+                  this.fill(255, 255, 255);
                 }
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
-                if(this.rects[i].n2 === 1 || this.rects[i].n2 === 3 || this.rects[i].n2 === 0){
-                  if(link1 === "u"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
-                    //ellipse(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,5,5);
-                    this.line(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link1 === "d"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
-                    //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
-                    this.line(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link1 === "l"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
-                    //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
-                    this.line(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link1 === "r"){
-                    //this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
-                    //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
-                    this.line(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
+                //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite1){
+                  this.rects[i].sprite1.x = this.rects[i].x - this.X;
+                  this.rects[i].sprite1.y = this.rects[i].y - this.Y;
                 }
-                if(this.rects[i].n2 === 2 || this.rects[i].n2 === 3 || this.rects[i].n2 === 0){
-                  if(link2 === "u"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
-                    //ellipse(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,5,5);
-                    this.line(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link2 === "d"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
-                    //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
-                    this.line(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link2 === "l"){
-                    //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
-                    //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
-                    this.line(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
-                  if(link2 === "r"){
-                    //this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
-                    //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
-                    this.line(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
-                  }
+                if(this.rects[i].sprite2){
+                  this.rects[i].sprite2.x = this.rects[i].x - this.X + this.rects[i].spriteShiftx;
+                  this.rects[i].sprite2.y = this.rects[i].y - this.Y + this.rects[i].spriteShifty;
                 }
+                // if(this.rects[i].n2 === 1 || this.rects[i].n2 === 3 || this.rects[i].n2 === 0){
+                //   if(link1 === "u"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
+                //     //ellipse(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,5,5);
+                //     this.line(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link1 === "d"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
+                //     //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
+                //     this.line(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link1 === "l"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
+                //     //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
+                //     this.line(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link1 === "r"){
+                //     //this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
+                //     //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
+                //     this.line(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                // }
+                // if(this.rects[i].n2 === 2 || this.rects[i].n2 === 3 || this.rects[i].n2 === 0){
+                //   if(link2 === "u"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
+                //     //ellipse(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,5,5);
+                //     this.line(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link2 === "d"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
+                //     //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
+                //     this.line(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link2 === "l"){
+                //     //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
+                //     //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
+                //     this.line(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                //   if(link2 === "r"){
+                //     //this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
+                //     //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
+                //     this.line(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,this.rects[i].x - this.X,this.rects[i].y - this.Y);
+                //   }
+                // }
                 this.fill(49, 66, 247);
                 if(islinked === false){
                   if(this.rects[i].n2 === 2){
                     if(link1 === "u"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
+                      this.rect(this.rects[i].x - this.rects[i].w/4 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w/2,-10);
                       
                     }
                     if(link1 === "d"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
+                      this.rect(this.rects[i].x - this.rects[i].w/4 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w/2,10);
                       //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
                     }
                     if(link1 === "l"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
+                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/4 - this.Y,-10,this.rects[i].h/2);
                       //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
                     }
                     if(link1 === "r"){
-                      this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
+                      this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/4 - this.Y,10,this.rects[i].h/2);
                       //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
                     }
                   }
                   if(this.rects[i].n2 === 1){
                     if(link2 === "u"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,-10);
+                      this.rect(this.rects[i].x - this.rects[i].w/4 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w/2,-10);
                       //ellipse(this.rects[i].x - this.X,this.rects[i].y - (this.rects[i].h/2) - this.Y,5,5);
                     }
                     if(link2 === "d"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w,10);
+                      this.rect(this.rects[i].x - this.rects[i].w/4 - this.X,this.rects[i].y + this.rects[i].h/2 - this.Y,this.rects[i].w/2,10);
                       //ellipse(this.rects[i].x - this.X,this.rects[i].y + (this.rects[i].h/2) - this.Y,5,5);
                     }
                     if(link2 === "l"){
-                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,-10,this.rects[i].h);
+                      this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/4 - this.Y,-10,this.rects[i].h/2);
                       //ellipse(this.rects[i].x - (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
                     }
                     if(link2 === "r"){
-                      this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,10,this.rects[i].h);
+                      this.rect(this.rects[i].x + this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/4 - this.Y,10,this.rects[i].h/2);
                       //ellipse(this.rects[i].x + (this.rects[i].w/2) - this.X,this.rects[i].y - this.Y,5,5);
                     }
                   }
@@ -1045,7 +1199,11 @@ class Platformer extends Phaser.Scene {
                 //draw
                 this.noStroke();
                 this.fill(0, 0, 255);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite1){
+                  this.rects[i].sprite1.x = this.rects[i].x - this.X;
+                  this.rects[i].sprite1.y = this.rects[i].y - this.Y;
+                }
               }
             }
             for(var i = 0; i < this.rects.length;i++){
@@ -1282,8 +1440,14 @@ class Platformer extends Phaser.Scene {
               //logic and drawing of the platforms
               if(this.rects[i].type === "platform"){
                 //draw
-                this.fill(0, 255, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                //this.tmpSprites.push(this.add.tileSprite(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y + 2500,this.rects[i].w,this.rects[i].h, "metal"));
+                //this.stroke(100, 100, 100);
+                //this.fill(100, 100, 100);
+                //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                if(this.rects[i].sprite){
+                  this.rects[i].sprite.x = this.rects[i].x - this.X;
+                  this.rects[i].sprite.y = this.rects[i].y - this.Y;
+                }
                 
               }
             }
@@ -1461,9 +1625,17 @@ class Platformer extends Phaser.Scene {
 
     update() {
 
+      // while(this.tmpSprites.length > 0){
+      //   this.tmpSprites[0].destroy(true);
+      //   this.tmpSprites.splice(0, 1);
+      // }
+      if(this.start){
+        this.level(this.CurrentLevel, true);
+        this.start = false;
+      }
 
         this.graphics.clear();
-        this.background(255, 255, 255);
+        this.background(100, 100, 100);
 
         this.noMagicZone(true);
         this.blocks();
@@ -1523,6 +1695,7 @@ class Platformer extends Phaser.Scene {
           this.dead = false;
           this.level(this.CurrentLevel, false);
         }
+        //this.add.sprite(100, 100, "metal")h
 
     }
 }
