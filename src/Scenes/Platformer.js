@@ -8,7 +8,7 @@ class Platformer extends Phaser.Scene {
         this.width = config.width;
         this.height = config.height;
         //the level the player is on
-        this.CurrentLevel = 1;
+        this.CurrentLevel = 2;
 
         this.X = 44;
         this.Y = 0;
@@ -114,10 +114,10 @@ class Platformer extends Phaser.Scene {
             this.mspeed = 5;
             this.maxSpeed = 3;
             if(bReset){
-              // this.respawnX = 100;
-              // this.respawnY = 231;
-              this.respawnX = 1500;
+              this.respawnX = 100;
               this.respawnY = 231;
+              // this.respawnX = 300;
+              // this.respawnY = 231;
             }
             this.dead = false;
             this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
@@ -128,53 +128,53 @@ class Platformer extends Phaser.Scene {
               {x:600,y:250,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},
               {x:600,y:113,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:400,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:360,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{
-                x:380,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{
-                  x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},
-                  {x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:6,n2:0,mi:false},
-                  {x:500,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                  {x:460,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                  {x:480,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-                  {x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},
-                  {x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
-                  {x:700,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                  {x:660,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                  {x:680,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-                  {x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},
-                  {x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
-                  {x:1000,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                  {x:960,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:980,y:145,w:20,h:70,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-                    {x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-                    {x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-                    {x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-                    {x:1410,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1310,y:140,w:98,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
-                    {x:1251,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1369,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1310,y:80,w:138,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},
-                    {x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},
-                    {x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
-                    {x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-                    {x:1800,y:210,w:100,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1700,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-                    {x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
-                    {x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-                    {x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
-                    {x:2100,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
-                    {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
-                    {x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
-                    {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
-                  ];
+              {x:400,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:360,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:380,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:335,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:6,n2:0,mi:false},
+              {x:308,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
+              {x:500,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:460,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:480,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:534,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:11,n2:0,mi:false},
+              {x:565,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+              {x:700,y:146,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:660,y:146,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:680,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:734,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:16,n2:0,mi:false},
+              {x:670,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"box",n1:0,n2:0,mi:false},
+              {x:1000,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:960,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:980,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
+              {x:1410,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1310,y:140,w:100,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
+              {x:1250,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1370,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1310,y:80,w:140,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1215,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:26,n2:0,mi:false},
+              {x:1397,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:36,n2:0,mi:false},
+              {x:1139,y:180,w:50,h:50,ax:0,ay:0,HitDown:false,type:"box",n1:-1,n2:0,mi:false},
+              {x:1566,y:80,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:1800,y:210,w:100,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1700,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
+              {x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
+              {x:2100,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
+              {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
+              {x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
+              {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+                ];
                     
                     
                     
@@ -185,10 +185,10 @@ class Platformer extends Phaser.Scene {
             this.mspeed = 5;
             this.maxSpeed = 3;
             if(bReset){
-              this.respawnX = 49;
+              // this.respawnX = 49;
+              // this.respawnY = 200;
+              this.respawnX = 180;
               this.respawnY = 200;
-              // this.respawnX = 600;
-              // this.respawnY = 100;
             }
             this.dead = false;
             this.helpPoint = [];
@@ -204,7 +204,7 @@ class Platformer extends Phaser.Scene {
               {x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:468,y:130 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:245,y:60,w:520,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:335,y:142,w:20,h:146,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:335,y:142,w:20,h:140,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
               {x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:305,y:280,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:9,n2:0,mi:false},
@@ -312,8 +312,8 @@ class Platformer extends Phaser.Scene {
             for(let i = 0; i < this.rects.length; i++){
               this.rects[i].sprite = null;
               if(this.rects[i].type.substring(0, 4) === "gate"){
-                this.rects[i].sprite = this.add.tileSprite(0, 0,this.rects[i].w,this.rects[i].h, "metal");
-                let tex = this.textures.get("metal").getSourceImage();
+                this.rects[i].sprite = this.add.tileSprite(0, 0,this.rects[i].w,this.rects[i].h, "tileGrey2");
+                let tex = this.textures.get("tileGrey2").getSourceImage();
                 this.rects[i].sprite.tileScaleX = 20/tex.width;
                 this.rects[i].sprite.tileScaleY = 20/tex.height;
               }
@@ -350,6 +350,8 @@ class Platformer extends Phaser.Scene {
       this.load.image("pipe3", "Tiles/pipeGreen_36.png");
       this.load.image("pipe4", "Tiles/pipeGreen_24.png");
       this.load.image("tileGrey", "Tiles/tileGrey_01.png");
+      this.load.image("tileGrey2", "Tiles/tile_0022.png");
+      //tile_0022.png
       //pipeGreen_36.png
     }
 
@@ -628,16 +630,16 @@ class Platformer extends Phaser.Scene {
               //logic and drawing of the buttons
               if(this.rects[i].type === "button"){
                 var out = true;
-                this.rects[i].HitDown = false;
-                //ditect a hit
+                 this.rects[i].HitDown = false;
+                // //ditect a hit
                 for(var o = 0; o < this.rects.length;o++){
-                  if(i !== o && this.rects[i].y - (this.rects[i].h/2) === this.rects[o].y + (this.rects[o].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
-                    this.rects[i].HitDown = true;
-                  }
-                }
+                   if(i !== o && this.rects[i].y - (this.rects[i].h/2) === this.rects[o].y + (this.rects[o].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
+                     this.rects[i].HitDown = true;
+                   }
+                 }
                 if(this.rects[i].HitDown === false){
-                  out = false;
-                }
+                   out = false;
+                 }
                 //check that all other buttons are pressed
                 for(var o = 0; o < this.rects.length;o++){
                   if(this.rects[i].type === "button" && this.rects[i].n1 === this.rects[o].n1 && this.rects[o].HitDown === false){
@@ -1728,7 +1730,6 @@ class Platformer extends Phaser.Scene {
           this.dead = false;
           this.level(this.CurrentLevel, false);
         }
-        this.rect(this.mouseX, this.mouseY, 10, 10);
         //this.add.sprite(100, 100, "metal")h
 
     }
