@@ -5,12 +5,14 @@ class Platformer extends Phaser.Scene {
 
     init() {
         this.SCALE = 2;
+        this.PARTICLE_VELOCITY = 50;
+        //this.SCALE = 0.7;
         this.width = config.width;
         this.height = config.height;
         //the level the player is on
-        this.CurrentLevel = 2;
+        this.CurrentLevel = 1;
 
-        this.X = 44;
+        this.X = 0;
         this.Y = 0;
         this.tmpSprites = [];
 
@@ -46,13 +48,15 @@ class Platformer extends Phaser.Scene {
             this.mouseIsPressed = false;
         });
 
-        this.mouseMoved = this.input.on('pointermove', (pointer) => {
-            let tmp = 0;
-            let dw = this.width - (this.width*this.SCALE)
-            let dh = this.height - (this.height*this.SCALE)
-            this.mouseX = ((pointer.x - dw*0.5)/(this.width*this.SCALE)) * this.width;
-            this.mouseY = ((pointer.y - dh*0.5)/(this.height*this.SCALE)) * this.height;
-        });
+        // this.mouseMoved = this.input.on('pointermove', (pointer) => {
+        //     let tmp = 0;
+        //     let dw = this.width - (this.width*this.SCALE)
+        //     let dh = this.height - (this.height*this.SCALE)
+        //     // this.mouseX = ((pointer.x - dw*0.5)/(this.width*this.SCALE)) * this.width;
+        //     // this.mouseY = ((pointer.y - dh*0.5)/(this.height*this.SCALE)) * this.height;
+        //     this.mouseX = pointer.x / this.SCALE - this.player.x;
+        //     this.mouseY = pointer.y / this.SCALE;
+        // });
 
 
         this.dragi = -1;
@@ -116,7 +120,7 @@ class Platformer extends Phaser.Scene {
             if(bReset){
               this.respawnX = 100;
               this.respawnY = 231;
-              // this.respawnX = 300;
+              // this.respawnX = 800;
               // this.respawnY = 231;
             }
             this.dead = false;
@@ -125,9 +129,9 @@ class Platformer extends Phaser.Scene {
             this.checkPoint = [204,1100,1650,2080,2223];
             this.rects = [
               {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
-              {x:600,y:250,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:600,y:250 + 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:159,y:250,w:50,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:10,mi:false},
-              {x:600,y:113,w:1124,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:600,y:113 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:400,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:360,y:153,w:20,h:60,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:380,y:145,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
@@ -149,7 +153,7 @@ class Platformer extends Phaser.Scene {
               {x:851,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
               {x:811,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
               {x:771,y:240,w:20,h:0,ax:0,ay:0,HitDown:false,type:"button",n1:21,n2:0,mi:false},
-              {x:1410,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1410,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1310,y:140,w:100,h:100,ax:0,ay:0,HitDown:false,type:"gateu",n1:-1,n2:0,mi:false},
               {x:1250,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1370,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
@@ -161,19 +165,22 @@ class Platformer extends Phaser.Scene {
               {x:1546,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1586,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1566,y:140,w:20,h:100,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
-              {x:1800,y:210,w:100,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:1700,y:250,w:100,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1800,y:210 + 5000/2,w:100,h:100 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1700,y:250 + 5000/2,w:100,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1739,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
               {x:1739,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeudm",n1:-1,n2:0,mi:false},
               {x:1880,y:130,w:100,h:160,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1819,y:155,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
               {x:1935,y:90,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:-1,n2:0,mi:false},
-              {x:2100,y:250,w:500,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:2100,y:250 + 5000/2,w:500,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:2109,y:111,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:1950,y:245,w:200,h:20,ax:0,ay:0,HitDown:false,type:"spike",n1:-1,n2:30,mi:false},
               {x:2151,y:235,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipeuub",n1:-1,n2:0,mi:false},
               {x:2151,y:215,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipedlm",n1:-1,n2:0,mi:false},
-              {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+              {x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1700,y:0 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:-460,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:2750,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
                 ];
                     
                     
@@ -203,7 +210,7 @@ class Platformer extends Phaser.Scene {
               {x:388,y:250 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:428,y:187,w:20,h:122,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:468,y:130 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:245,y:60,w:520,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:245,y:60 - 5000/2,w:520,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:335,y:142,w:20,h:140,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
               {x:315,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {x:355,y:130,w:20,h:130,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
@@ -219,11 +226,13 @@ class Platformer extends Phaser.Scene {
               {x:695,y:130,w:20,h:20,ax:0,ay:0,HitDown:false,type:"piperrb",n1:5,n2:-1,mi:false},
               {x:624,y:88,w:20,h:20,ax:0,ay:0,HitDown:false,type:"pipelum",n1:5,n2:-1,mi:false},
               {x:827,y:54 + 5000/2,w:100,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:610,y:-40,w:240,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:500,y:10,w:20,h:120,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:735,y:-25,w:20,h:50,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {x:810,y:-10,w:135,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
-            ];
+              {x:610,y:-40 - 5000/2,w:240,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:500,y:10 - 5000/2,w:20,h:5000 + 120,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:735,y:-25 - 5000/2,w:20,h:5000 + 50,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:810,y:-10 - 5000/2,w:135,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:-500,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1370,y:-10,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+            ]
                     
                     
             }
@@ -243,8 +252,39 @@ class Platformer extends Phaser.Scene {
             this.mirror = [{x:269,y:266,l:1000,a:89.9999,c:1,r:false,tx:-219,ty:0,b:false},{x:335,y:118,l:100,a:89.9999,c:1,r:false,tx:-37,ty:-118,b:false}];
             this.lazer = [];
             //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
-            this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:226,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:0,n2:0,mi:false},{x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},{x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:301,y:290,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:-90,n2:0,mi:false},{x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},{x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},{x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-                    {x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},{x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false}];
+            this.rects = [
+              {x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
+              {x:479,y:250,w:800,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:206,y:128,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:186,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:226,y:160,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:127,y:-162,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:0,n2:0,mi:false},
+              {x:152,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {x:127,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:8,n2:0,mi:false},
+              {x:206,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:301,y:290 + 5000/2,w:60,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:281,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:321,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:301,y:270,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:-90,n2:0,mi:false},
+              {x:279,y:187,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {x:279,y:118,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {x:279,y:45,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:135,n2:0,mi:false},
+              {x:386,y:116,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:20,n2:0,mi:false},
+              {x:456,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:436,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:476,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:456,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:656,y:108,w:60,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:636,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:676,y:140,w:20,h:80,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:656,y:187,w:20,h:80,ax:0,ay:0,HitDown:false,type:"gated",n1:-1,n2:0,mi:false},
+              {x:586,y:210,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:24,n2:0,mi:false},
+              {x:90,y:250 + 5000/2,w:400,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:800,y:250 + 5000/2,w:980,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:656,y:-500,w:10000,h:1000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:-512,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {x:1400,y:0,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              ];
                     
             }
 
@@ -351,6 +391,8 @@ class Platformer extends Phaser.Scene {
       this.load.image("pipe4", "Tiles/pipeGreen_24.png");
       this.load.image("tileGrey", "Tiles/tileGrey_01.png");
       this.load.image("tileGrey2", "Tiles/tile_0022.png");
+      this.load.image("background", "Tiles//Marble/tile_0070.png");
+      //tile_0070.png
       //tile_0022.png
       //pipeGreen_36.png
     }
@@ -390,7 +432,7 @@ class Platformer extends Phaser.Scene {
 
         this.background = function(r, g, b, a = 255){
             let tmpColor = this.color(r, g, b, a);
-            const tmpRect = new Phaser.Geom.Rectangle(0, 0, this.width, this.height);
+            const tmpRect = new Phaser.Geom.Rectangle(this.player.x - this.width/2, this.player.y - this.height/2, this.width, this.height);
             this.graphics.lineStyle(1, tmpColor.rgb, tmpColor.a/255);
             this.graphics.fillStyle(tmpColor.rgb, tmpColor.a/255);
             this.graphics.strokeRectShape(tmpRect);
@@ -572,23 +614,46 @@ class Platformer extends Phaser.Scene {
               if(this.rects[i].type === "player"){
                 //implement this.gravity
                 this.rects[i].ay += this.gravity;
+                this.rects[i].lx = this.rects[i].x;
                 //move camera to block
-                this.X = this.rects[i].x - (this.width/2);
-                this.Y = this.rects[i].y - (this.height/2);
+                this.player.x = this.rects[i].x;
+                this.player.y = this.rects[i].y - 2;
+                ////////////////////////////////this.X = this.rects[i].x - (this.width/2);
+                ////////////////////////////////this.Y = this.rects[i].y - (this.height/2);
                 //if you fall, die
                 if(this.rects[i].y > 400){
                   this.dead = true;
                 }
+                this.rects[i].timer--;
+
+
                 //movement
-                if(this.DKey.isDown/*keyIsPressed && (keys[68] === true || keys[39] === true)*/){
+                if(this.DKey.isDown){
                    this.rects[i].ax = 2;
+                   this.player.setFlip(true, false);
+                   //this.player.anims.play('walk', true);
                 }
-                if(this.AKey.isDown/*keyIsPressed && (keys[65] === true || keys[37] === true)*/){
+                if(this.AKey.isDown){
                   this.rects[i].ax = -2;
+                  this.player.resetFlip();
+                  //this.player.anims.play('walk', true);
                 }
+                let pj = this.rects[i].HitDown;
                 if(this.WKey.isDown/*keyIsPressed && (keys[87] || keys[32] || keys[38] === true)*/ && this.rects[i].HitDown === true){
                   this.rects[i].ay =  -3;
+                  this.jumping.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, false);
+                  this.jumping.setParticleSpeed(0, -40);
+
+                    // Only play smoke effect if touching the ground
+
+                    if (this.rects[i].HitDown) {
+
+                      this.jumping.start();
+                      this.rects[i].timer = 2;
+
+                    }
                 }
+                this.rects[i].justDown = this.rects[i].HitDown;
                 //this.rects[i].ax *= 0.8;
                 this.rects[i].HitDown = false;
                 //collision logic
@@ -621,9 +686,71 @@ class Platformer extends Phaser.Scene {
                 else{
                   this.rects[i].ax *= 0.95;
                 }
+                if(pj != this.rects[i].HitDown && this.rects[i].HitDown){
+                  this.jumping.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, false);
+                  this.jumping.setParticleSpeed(0, -40);
+
+                    // Only play smoke effect if touching the ground
+
+                    if (this.rects[i].HitDown) {
+
+                      this.jumping.start();
+                      this.rects[i].timer = 2;
+
+                    }
+                }
+
+
+                if(this.rects[i].timer < 0){
+                this.walking.stop();
+                this.jumping.stop();
+                }
+                if(Math.abs(this.rects[i].lx - this.rects[i].x) > 0.1){
+                  if(this.DKey.isDown){
+                    this.player.setFlip(true, false);
+                    this.player.anims.play('walk', true);
+
+                    this.walking.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, true);
+                    this.walking.setParticleSpeed(-this.PARTICLE_VELOCITY, 0);
+
+                    // Only play smoke effect if touching the ground
+
+                    if (this.rects[i].HitDown) {
+
+                      this.walking.start();
+
+                    }
+                 }
+                 if(this.AKey.isDown){
+                   this.player.resetFlip();
+                   this.player.anims.play('walk', true);
+
+                   this.walking.startFollow(this.player, this.player.displayWidth/2-10, this.player.displayHeight/2-3, false);
+                    this.walking.setParticleSpeed(this.PARTICLE_VELOCITY, 0);
+
+                    // Only play smoke effect if touching the ground
+
+                    if (this.rects[i].HitDown) {
+
+                      this.walking.start();
+
+                    }
+                 }
+                }
+                else {
+                  this.player.anims.play('idle');
+                }
+
+                if(this.rects[i].ax === 0 && this.rects[i].ay === 0){
+                  //this.player.anims.play('idle');
+                }
+                if(!this.rects[i].HitDown){
+                  this.player.anims.play('jump');
+
+                }
                 //draw player
-                this.fill(255, 0, 0);
-                this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                //this.fill(255, 0, 0);
+                //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
               }
             }
             for(var i = 0; i < this.rects.length;i++){
@@ -1451,6 +1578,9 @@ class Platformer extends Phaser.Scene {
             }
             this.noStroke();
             for(var i = 0; i < this.rects.length;i++){
+              if(this.mouseIsPressed && this.mouseX > this.rects[i].x - this.X - (this.rects[i].w/2) && this.mouseX < this.rects[i].x - this.X + (this.rects[i].w/2) && this.mouseY > this.rects[i].y - this.Y - (this.rects[i].h/2) && this.mouseY < this.rects[i].y - this.Y + (this.rects[i].h/2)){
+                console.log(i);
+              }  
               this.noStroke();
               //logic and drawing of the platforms
               if(this.rects[i].type === "platform"){
@@ -1459,6 +1589,7 @@ class Platformer extends Phaser.Scene {
                 //this.stroke(100, 100, 100);
                 //this.fill(100, 100, 100);
                 //this.rect(this.rects[i].x - this.rects[i].w/2 - this.X,this.rects[i].y - this.rects[i].h/2 - this.Y,this.rects[i].w,this.rects[i].h);
+                
                 if(this.rects[i].sprite){
                   this.rects[i].sprite.x = this.rects[i].x - this.X;
                   this.rects[i].sprite.y = this.rects[i].y - this.Y;
@@ -1651,14 +1782,69 @@ class Platformer extends Phaser.Scene {
           }
         };
           //console.log(this.rects);
+        this.paralax = this.add.tileSprite(0, 0, 1000, 1000, "tileGrey");
+        this.paralax.depth = -100;
 
+        this.player = this.add.sprite(200, 200, "platformer_characters", "tile_0000.png");
+        this.player.depth = 1000;
+
+        this.walking = this.add.particles(0, 0, "kenny-particles", {
+          frame: ['smoke_08.png', 'smoke_10.png'],
+          // TODO: Try: add random: true
+          random: true,
+          scale: {start: 0.03*0.6, end: 0.1*0.6},
+          // TODO: Try: maxAliveParticles: 8,
+          maxAliveParticles: 8,
+          lifespan: 250,
+          // TODO: Try: gravityY: -400,
+          gravityY: -300,
+          alpha: {start: 1, end: 0.0}, 
+      });
+      this.jumping = this.add.particles(0, 0, "kenny-particles", {
+        frame: ['smoke_07.png', 'smoke_19.png'],
+        // TODO: Try: add random: true
+        random: true,
+        scale: {start: 0.03*0.6, end: 0.1},
+        // TODO: Try: maxAliveParticles: 8,
+        maxAliveParticles: 8,
+        lifespan: 150,
+        // TODO: Try: gravityY: -400,
+        gravityY: -100,
+        alpha: {start: 1, end: 0.0}, 
+    });
+
+      this.jumping.stop();
+      this.walking.stop();
     }
 
     update() {
       this.width = this.sys.game.canvas.width;
       this.height = this.sys.game.canvas.height;
       this.cameras.main.setViewport(0, 0, this.width, this.height);
+      this.cameras.main.startFollow(this.player, true, 0.25, 0.25); // (target, [,roundPixels][,lerpX][,lerpY])
+      this.cameras.main.setDeadzone(50, 50);
+      this.cameras.main.setZoom(this.SCALE);
 
+      this.mouseX = this.player.x + (game.input.mousePointer.x - this.width/2) / this.SCALE;
+      this.mouseY = this.player.y + (game.input.mousePointer.y - this.height/2) / this.SCALE;
+
+      //this.player.x = this.width/2;
+      //this.player.y = this.height/2 - 2;
+      //this.player.anims.play('idle');
+
+      let tmpScale = 0.2
+      let ratio = this.width/this.height;
+      this.paralax.tileScaleX = tmpScale / ratio;
+      this.paralax.tileScaleY = tmpScale;
+      this.paralax.tilePositionX = this.player.x;
+      this.paralax.tilePositionY = this.player.y;
+      this.paralax.displayWidth = this.width;
+      this.paralax.displayHeight = this.height;
+      this.paralax.x = this.player.x;
+      this.paralax.y = this.player.y;
+      /*this.paralax.setCrop(
+        0, 0, this.width, this.height
+    );*/
 
       // while(this.tmpSprites.length > 0){
       //   this.tmpSprites[0].destroy(true);
@@ -1670,7 +1856,7 @@ class Platformer extends Phaser.Scene {
       }
 
         this.graphics.clear();
-        this.background(100, 100, 100);
+        this.background(0, 0, 0,  100);
 
         this.noMagicZone(true);
         this.blocks();
@@ -1731,6 +1917,9 @@ class Platformer extends Phaser.Scene {
           this.level(this.CurrentLevel, false);
         }
         //this.add.sprite(100, 100, "metal")h
-
+        if(this.CurrentLevel > 3){
+          this.background(0, 0, 0);
+          //you won
+        }
     }
 }
