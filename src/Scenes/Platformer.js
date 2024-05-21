@@ -481,10 +481,10 @@ class Platformer extends Phaser.Scene {
       this.load.image("gem", "Tiles/platformPack_item001.png");
       //platformPack_item001.png
 
-      this.load.audio('jump', [ 'Sound/impactSoft_heavy_001.ogg' ]);
-      this.load.audio('land', [ 'Sound/impactSoft_medium_000.ogg' ]);
-      this.load.audio('walk', [ 'Sound/footstep_concrete_001.ogg' ]);
-      this.load.audio('gem', [ 'Sound/toggle_002.ogg' ]);
+      this.load.audio('jump', [ 'sounds/impactSoft_heavy_001.ogg' ]);
+      this.load.audio('land', [ 'sounds/impactSoft_medium_000.ogg' ]);
+      this.load.audio('walk', [ 'sounds/footstep_concrete_001.ogg' ]);
+      this.load.audio('gem', [ 'sounds/toggle_002.ogg' ]);
       //impactSoft_medium_000.ogg
       //footstep_concrete_001.ogg
       //tile_0070.png
