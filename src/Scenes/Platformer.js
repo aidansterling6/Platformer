@@ -13,6 +13,14 @@ class Platformer extends Phaser.Scene {
         this.CurrentLevel = 1;
 
         this.score = 0;
+        this.scores = {};
+        this.maxScore = function(){
+          let out = 0;
+          for(let key in this.scores){
+            out += this.scores[key];
+          }
+          return out;
+        }
 
         this.X = 0;
         this.Y = 0;
@@ -105,6 +113,7 @@ class Platformer extends Phaser.Scene {
         this.mirror = [];
         //sets the level to it's argument
         this.level = function(num, bReset){
+          console.log(this.maxScore());
             for(let i = 0; i < this.rects.length; i++){
               if(this.rects[i].sprite){
                 this.rects[i].sprite.destroy(true);
@@ -114,6 +123,11 @@ class Platformer extends Phaser.Scene {
               }
               if(this.rects[i].sprite2){
                 this.rects[i].sprite2.destroy(true);
+              }
+            }
+            for(let i = 0; i < this.gems.length; i++){
+              if(this.gems[i].sprite){
+                this.gems[i].sprite.destroy(true);
               }
             }
             if(num === 1){
@@ -130,6 +144,8 @@ class Platformer extends Phaser.Scene {
             this.noMagic = [{x:646,y:200,w:109,h:40}];
             this.checkPoint = [204,1100,1650,2080,2223];
             this.gems = [
+              {x:200, y:150, w:10, h:10},
+              {x:250, y:190, w:10, h:10},
               {x:155, y:200, w:10, h:10},
               {x:560, y:150, w:10, h:10},
               {x:575, y:150, w:10, h:10},
@@ -193,7 +209,9 @@ class Platformer extends Phaser.Scene {
               {level: 1, x:2172,y:195,w:20,h:100,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {level: 1, x:1700,y:0 - 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
               {level: 1, x:-460,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
-              {level: 1, x:2750,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false}
+              {level: 1, x:2750,y:0 - 5000/2,w:1000,h:10000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
+              {level: 1, x:250,y:200,w:40,h:10,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false, p:true},
+              {level: 1, x:200,y:160,w:40,h:10,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false, p:true}
                 ];
                     
                     
@@ -334,6 +352,7 @@ class Platformer extends Phaser.Scene {
               this.checkPoint = [];
               this.mirror = [];
               this.lazer = [];
+              this.gems = [];
               //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
               this.rects = [
                 {level: 4, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
@@ -341,6 +360,7 @@ class Platformer extends Phaser.Scene {
                 ];
                       
               }
+            this.scores[num] = this.gems.length;
 
 
             for(let i = 0; i < this.rects.length; i++){
@@ -778,20 +798,26 @@ class Platformer extends Phaser.Scene {
                   }
                 }
                 for(var o = 0; o < this.rects.length;o++){
-                  if(i !== o && this.rects[i].y < this.rects[o].y && this.rects[i].y + this.rects[i].ay > this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
+                  let p = (this.rects[o].type === "platform" && this.rects[o].p);
+                  if(p && i !== o && this.rects[i].ay > 0 && this.rects[i].y < this.rects[o].y && this.rects[i].y + this.rects[i].ay > this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
                     this.rects[i].ay = this.rects[i].ay * -0;
                     this.rects[i].y = this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2);
                     this.rects[i].HitDown = true;
                   }
-                  if(i !== o && this.rects[i].y > this.rects[o].y && this.rects[i].y + this.rects[i].ay < this.rects[o].y + (this.rects[o].h/2) + (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
+                  if(!p && i !== o && this.rects[i].y < this.rects[o].y && this.rects[i].y + this.rects[i].ay > this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
+                    this.rects[i].ay = this.rects[i].ay * -0;
+                    this.rects[i].y = this.rects[o].y - (this.rects[o].h/2) - (this.rects[i].h/2);
+                    this.rects[i].HitDown = true;
+                  }
+                  if(!p && i !== o && this.rects[i].y > this.rects[o].y && this.rects[i].y + this.rects[i].ay < this.rects[o].y + (this.rects[o].h/2) + (this.rects[i].h/2) && this.rects[i].x + (this.rects[i].w/2) - 1 > this.rects[o].x - (this.rects[o].w/2) && this.rects[i].x - (this.rects[i].w/2) + 1 < this.rects[o].x + (this.rects[o].w/2)){
                     this.rects[i].ay = this.rects[i].ay * -0;
                     this.rects[i].y = this.rects[o].y + (this.rects[o].h/2) + (this.rects[i].h/2);
                   }
-                  if(i !== o && this.rects[i].x < this.rects[o].x && this.rects[i].x + this.rects[i].ax > this.rects[o].x - (this.rects[o].w/2) - (this.rects[i].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
+                  if(!p && i !== o && this.rects[i].x < this.rects[o].x && this.rects[i].x + this.rects[i].ax > this.rects[o].x - (this.rects[o].w/2) - (this.rects[i].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
                     this.rects[i].ax = this.rects[i].ax * -0;
                     this.rects[i].x = this.rects[o].x - (this.rects[o].w/2) - (this.rects[i].w/2);
                   }
-                  if(i !== o && this.rects[i].x > this.rects[o].x && this.rects[i].x + this.rects[i].ax < this.rects[o].x + (this.rects[o].w/2) + (this.rects[i].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
+                  if(!p && i !== o && this.rects[i].x > this.rects[o].x && this.rects[i].x + this.rects[i].ax < this.rects[o].x + (this.rects[o].w/2) + (this.rects[i].w/2) && this.rects[i].y + (this.rects[i].h/2) - 1 > this.rects[o].y - (this.rects[o].h/2) && this.rects[i].y - (this.rects[i].h/2) + 1 < this.rects[o].y + (this.rects[o].h/2)){
                     this.rects[i].ax = this.rects[i].ax * -0;
                     this.rects[i].x = this.rects[o].x + (this.rects[o].w/2) + (this.rects[i].w/2);
                   }
@@ -2053,7 +2079,6 @@ class Platformer extends Phaser.Scene {
           this.line(this.checkPoint[i] - this.X,this.player.y - this.height/2,this.checkPoint[i] - this.X,this.player.y + this.height/2);
           this.strokeWeight(1);
         }
-
         if(this.dead === true){
           //frameRate(1);
           this.dragi = -1;
@@ -2069,6 +2094,7 @@ class Platformer extends Phaser.Scene {
           this.win.setOrigin(0.5, 0.5);
           this.win.visible = true;
           this.win.depth = 1000;
+          this.win.text = "You Won!!! you got " + this.score + " out of " + this.maxScore() + " gems\npress enter to restart the game";
           if(this.EnterKey.isDown){
             this.CurrentLevel = 1;
             this.win.visible = false;
