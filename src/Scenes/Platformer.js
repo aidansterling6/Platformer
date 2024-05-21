@@ -21,6 +21,7 @@ class Platformer extends Phaser.Scene {
           }
           return out;
         }
+        this.btime = 0;
 
         this.X = 0;
         this.Y = 0;
@@ -143,19 +144,21 @@ class Platformer extends Phaser.Scene {
             this.helpPoint = [{x:122,t:"Jump over the spikes"},{x:275,t:"Move the blue box onto the button to open the gate, you can push it."},{x:444,t:"Click and drag the box to use magic."},{x:594,t:"You can not use magic in the red area, you have to push this block."},{x:864,t:"Hover over a gate with your mouse to see its connections."},{x:1066,t:"The red line is a check point, if you go through it your character will spawn at it when you die"},{x:1080,t:"Do not take objects through checkpoints because you will die"},{x:1673,t:"The grey boxes with lines are pipes"},{x:1683,t:"Pipes connect when the lines are lined up"},{x:1693,t:"Pipes can only connect to other pipes if they have the blue bouncy water at one end"},{x:1703,t:"You can only move the lightly colored pipes"}];
             this.noMagic = [{x:646,y:200,w:109,h:40}];
             this.checkPoint = [204,1100,1650,2080,2223];
-            this.gems = [
-              {x:200, y:150, w:10, h:10},
-              {x:250, y:190, w:10, h:10},
-              {x:155, y:200, w:10, h:10},
-              {x:560, y:150, w:10, h:10},
-              {x:575, y:150, w:10, h:10},
-              {x:860, y:150, w:10, h:10},
-              {x:875, y:150, w:10, h:10},
-              {x:1200, y:120, w:10, h:10},
-              {x:1215, y:120, w:10, h:10},
-              {x:1650, y:120, w:10, h:10},
-              {x:2108, y:170, w:10, h:10},
-            ];
+            if(bReset){
+              this.gems = [
+                {x:200, y:150, w:10, h:10},
+                {x:250, y:190, w:10, h:10},
+                {x:155, y:200, w:10, h:10},
+                {x:560, y:150, w:10, h:10},
+                {x:575, y:150, w:10, h:10},
+                {x:860, y:150, w:10, h:10},
+                {x:875, y:150, w:10, h:10},
+                {x:1200, y:120, w:10, h:10},
+                {x:1215, y:120, w:10, h:10},
+                {x:1650, y:120, w:10, h:10},
+                {x:2108, y:170, w:10, h:10},
+              ];
+            }
             this.rects = [
               {level: 1, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
               {level: 1, x:600,y:250 + 5000/2,w:1124,h:20 + 5000,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
@@ -232,22 +235,24 @@ class Platformer extends Phaser.Scene {
             this.helpPoint = [];
             this.noMagic = [{x:220,y:240,w:99,h:40},{x:664,y:84,w:100,h:120}];
             this.checkPoint = [600,819];
-            this.gems = [
-              {x:155, y:150, w:10, h:10},
-              {x:155, y:165, w:10, h:10},
-              {x:155, y:180, w:10, h:10},
-              {x:170, y:150, w:10, h:10},
-              {x:170, y:165, w:10, h:10},
-              {x:170, y:180, w:10, h:10},
-              {x:185, y:150, w:10, h:10},
-              {x:185, y:165, w:10, h:10},
-              {x:185, y:180, w:10, h:10},
-              {x:407, y:180, w:10, h:10},
-              {x:407, y:165, w:10, h:10},
-              {x:407, y:150, w:10, h:10},
-              {x:407, y:135, w:10, h:10},
-              {x:740, y:50, w:10, h:10},
-            ];
+            if(bReset){
+              this.gems = [
+                {x:155, y:150, w:10, h:10},
+                {x:155, y:165, w:10, h:10},
+                {x:155, y:180, w:10, h:10},
+                {x:170, y:150, w:10, h:10},
+                {x:170, y:165, w:10, h:10},
+                {x:170, y:180, w:10, h:10},
+                {x:185, y:150, w:10, h:10},
+                {x:185, y:165, w:10, h:10},
+                {x:185, y:180, w:10, h:10},
+                {x:407, y:180, w:10, h:10},
+                {x:407, y:165, w:10, h:10},
+                {x:407, y:150, w:10, h:10},
+                {x:407, y:135, w:10, h:10},
+                {x:740, y:50, w:10, h:10},
+              ];
+          }
             this.rects = [
               {level: 2, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
               {level: 2, x:100,y:250 + 5000/2,w:230,h:5000 + 20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},
@@ -298,9 +303,11 @@ class Platformer extends Phaser.Scene {
             this.checkPoint = [261,474,800];
             this.mirror = [{x:269,y:266,l:1000,a:89.9999,c:1,r:false,tx:-219,ty:0,b:false},{x:335,y:118,l:100,a:89.9999,c:1,r:false,tx:-37,ty:-118,b:false}];
             this.lazer = [];
-            this.gems = [
-              {x:187, y:100, w:10, h:10},
-            ];
+            if(bReset){
+              this.gems = [
+                {x:187, y:100, w:10, h:10},
+              ];
+            }
             //this.rects = [{x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},{x:100,y:250,w:230,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:-1,n2:0,mi:false},{x:99,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"lazer",n1:180,n2:0,mi:false},{x:18,y:178,w:20,h:20,ax:0,ay:0,HitDown:false,type:"mirror",n1:45,n2:0,mi:false},{x:18,y:63,w:20,h:20,ax:0,ay:0,HitDown:false,type:"sense",n1:5,n2:0,mi:false},{x:154,y:137,w:20,h:20,ax:0,ay:0,HitDown:false,type:"gated",n1:0,n2:0,mi:false},{x:154,y:113,w:20,h:20,ax:0,ay:0,HitDown:false,type:"platform",n1:0,n2:0,mi:false}];
             this.rects = [
               {level: 3, x:this.respawnX,y:this.respawnY,w:10,h:20,ax:0,ay:0,HitDown:false,type:"player",n1:-1,n2:0,mi:false},
@@ -513,11 +520,15 @@ class Platformer extends Phaser.Scene {
 
       this.scoreText = this.add.text(0, 0, 'Score: 0', { fontFamily: 'Arial', fontSize: 15, color: '#ffffff' });
 
+      this.helpTxt = this.add.text(0, 0, 'You Won!!!, press enter to restart the game', { fontFamily: 'Arial', fontSize: 15, color: '#000000' });
+      this.helpTxt.visible = true;
 
         this.WKey = this.input.keyboard.addKey("W");
         this.AKey = this.input.keyboard.addKey("A");
         this.SKey = this.input.keyboard.addKey("S");
         this.DKey = this.input.keyboard.addKey("D");
+        this.HKey = this.input.keyboard.addKey("H");
+        this.RKey = this.input.keyboard.addKey("R");
         this.EnterKey = this.input.keyboard.addKey("Enter");
         this.start = true;
 
@@ -2079,15 +2090,31 @@ class Platformer extends Phaser.Scene {
           this.line(this.checkPoint[i] - this.X,this.player.y - this.height/2,this.checkPoint[i] - this.X,this.player.y + this.height/2);
           this.strokeWeight(1);
         }
-        if(this.dead === true){
+        if(this.dead || this.RKey.isDown){
           //frameRate(1);
           this.dragi = -1;
           this.dead = false;
           this.level(this.CurrentLevel, false);
         }
+        if(this.HKey.isDown && this.btime <= 0){
+          this.btime = 10;
+          if(this.helpTxt.visible){
+            this.helpTxt.visible = false;
+          } else{
+            this.helpTxt.visible = true;
+          }
+        }
+        this.btime--;
+        this.helpTxt.x = this.player.x;
+        this.helpTxt.y = this.player.y + 50;
+        this.helpTxt.setOrigin(0.5, 0.5);
+        //this.helpTxt.visible = true;
+        this.helpTxt.depth = 1000;
+        this.helpTxt.text = "      WASD to move. Click and drag on boxes to move them.\nPress R to reset to last checkpoint. Press H to toggle this menu.";
         //this.add.sprite(100, 100, "metal")h
         this.win.visible = false;
         if(this.CurrentLevel > 3){
+          this.helpTxt.visible = false;
           this.background(0, 0, 0);
           this.win.x = this.player.x;
           this.win.y = this.player.y - 150;
