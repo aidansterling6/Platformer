@@ -703,7 +703,7 @@ class Platformer extends Phaser.Scene {
                         this.lazer[i].t = true;
                       }
                     } else{
-                      this.rect(x - this.X - 2.5,y - this.Y - 2.5,5,5);
+                      //this.rect(x - this.X - 2.5,y - this.Y - 2.5,5,5);
                     }
                   }
                 }
@@ -2121,7 +2121,7 @@ class Platformer extends Phaser.Scene {
           this.win.setOrigin(0.5, 0.5);
           this.win.visible = true;
           this.win.depth = 1000;
-          this.win.text = "You Won!!! you got " + this.score + " out of " + this.maxScore() + " gems\npress enter to restart the game";
+          this.win.text = "You Won!!! you got " + this.score + " out of 26 gems\npress enter to restart the game";
           if(this.EnterKey.isDown){
             this.CurrentLevel = 1;
             this.win.visible = false;
